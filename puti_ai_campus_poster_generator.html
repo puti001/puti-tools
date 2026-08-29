@@ -247,6 +247,7 @@
               </label>
               <select id="select-art-style" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all">
                 <option value="YouTube 縮圖風格" selected>YouTube 縮圖風格</option>
+                <option value="文字為主體風格">文字為主體風格</option>
                 <option value="手繪塗鴉筆記風">手繪塗鴉筆記風</option>
                 <option value="日式動漫插畫風">日式動漫插畫風</option>
                 <option value="黑板粉筆手繪風">黑板粉筆手繪風</option>
@@ -970,7 +971,20 @@
           ? `\n- 附加資訊（請AI簡潔摘要）：${data.extraInfo}（⚠️ 請僅擷取簡要關鍵字，以繁體中文排版在海報次要角落，字體勿過大喧賓奪主）` 
           : '';
 
-        prompt = `請生成一張高畫質校園活動海報：
+        const isTextOnly = data.style.includes('文字為主體');
+
+        if (isTextOnly) {
+          prompt = `請生成一張高畫質校園活動海報（文字為主體排版設計）：
+- 繁體中文主標題：「${data.activityName}」（⚠️ 文字為唯一主視覺焦點，以繁體中文大字排版為主，字體清晰易讀）${extraInfoPrompt}
+- 視覺風格：文字為主體風格（文字是唯一主視覺，以繁體中文大字排版為主；畫面簡潔俐落、留白充足、文字清晰易讀，使用色塊與線條建立層次，僅加入少量邊角小圖示作陪襯，嚴禁出現任何人物、角色、主角或大型插畫）
+- 輔助陪襯圖示：${data.visualSubject}（僅作為角落極簡微型圖標或背景極簡線條點綴，不可出現人物角色或大型插圖干擾文字）
+- 應用情境：${data.scenarioTitle}
+- 目標對象：${data.audience}
+- 主色調：${data.color}
+- 圖片比例：${data.ratio}
+- 畫面要求：繁體中文字體工整美觀且清晰易讀、字形正確無錯字，強調純文字大字排版美感、色塊與線條層次，留白充足、無人物角色、無雜亂雜訊。`;
+        } else {
+          prompt = `請生成一張高畫質校園活動海報：
 - 繁體中文主標題：「${data.activityName}」（請務必以清晰、正確的繁體中文字體呈現在海報主標題位置）${extraInfoPrompt}
 - 視覺主體：${data.visualSubject}
 - 應用情境：${data.scenarioTitle}
@@ -979,6 +993,7 @@
 - 主色調：${data.color}
 - 圖片比例：${data.ratio}
 - 畫面要求：繁體中文字體工整清晰無錯字，構圖平衡，色彩層次豐富，高品質無雜訊。`;
+        }
 
       } else if (data.aiTool === 'midjourney') {
         promptBadgeTool.textContent = 'Midjourney v6';
@@ -988,8 +1003,13 @@
         if (!mjRatio.includes(':')) mjRatio = '3:4';
 
         const mjExtra = data.extraInfo ? `, secondary concise Traditional Chinese details "${data.extraInfo}"` : '';
+        const isTextOnly = data.style.includes('文字為主體');
 
-        prompt = `/imagine prompt: Educational school poster for "${data.activityName}", featuring ${data.visualSubject}, with large prominent Traditional Chinese typography title "${data.activityName}"${mjExtra}, in ${data.style} style, ${data.color} palette, professional graphic design, 8k resolution, crisp details --ar ${mjRatio} --v 6.0`;
+        if (isTextOnly) {
+          prompt = `/imagine prompt: Minimalist typography school poster for "${data.activityName}", prominent large bold Traditional Chinese typography title "${data.activityName}" as the single primary visual focal point${mjExtra}, clean graphic design layout with color blocks and geometric lines, ample negative space, subtle minimal corner decorative icons only, strictly NO human characters, NO mascots, NO large illustrations, ${data.color} palette, high aesthetic typography composition, 8k resolution, crisp clean details --ar ${mjRatio} --v 6.0`;
+        } else {
+          prompt = `/imagine prompt: Educational school poster for "${data.activityName}", featuring ${data.visualSubject}, with large prominent Traditional Chinese typography title "${data.activityName}"${mjExtra}, in ${data.style} style, ${data.color} palette, professional graphic design, 8k resolution, crisp details --ar ${mjRatio} --v 6.0`;
+        }
       }
 
       outputPrompt.value = prompt;
