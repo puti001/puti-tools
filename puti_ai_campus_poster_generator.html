@@ -246,20 +246,36 @@
                 </div>
               </div>
 
-              <!-- API Key 與 分析動作 -->
-              <div class="pt-2 border-t border-teal-200/60 space-y-2">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <div class="flex-1 min-w-[200px] relative">
+              <!-- API Key 與 模型設定 -->
+              <div class="pt-2 border-t border-teal-200/60 space-y-2.5">
+                <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+                  <!-- API Key 輸入框 -->
+                  <div class="sm:col-span-7 relative">
                     <input id="input-gemini-key" type="password" placeholder="貼上免費 Gemini API Key (留空可用下方免Key按鈕)" 
                       class="w-full pl-3 pr-8 py-1.5 text-xs rounded-lg border border-slate-300 bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-teal-500">
                     <button id="btn-toggle-key-vis" type="button" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
                       <i class="fa-regular fa-eye"></i>
                     </button>
                   </div>
-                  <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-[11px] text-teal-700 hover:underline font-bold whitespace-nowrap">
-                    <i class="fa-solid fa-key text-[10px]"></i> 免費取得 Key
-                  </a>
+                  <!-- 模型選擇選單 (長治久安架構) -->
+                  <div class="sm:col-span-5 flex items-center gap-1.5">
+                    <select id="select-gemini-model" class="w-full px-2 py-1.5 text-xs rounded-lg border border-slate-300 bg-white text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500">
+                      <option value="auto" selected>⚡ 自動偵測最新模型 (推薦)</option>
+                      <option value="gemini-3.7-flash">Gemini 3.7 Flash</option>
+                      <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+                      <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                      <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+                      <option value="__custom__">自訂模型名稱...</option>
+                    </select>
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" title="前往 Google AI Studio 免費領取 API Key" class="text-teal-700 hover:text-teal-900 font-bold text-xs p-1.5 bg-white rounded-lg border border-slate-200 hover:bg-teal-50 flex items-center justify-center whitespace-nowrap">
+                      <i class="fa-solid fa-key"></i>
+                    </a>
+                  </div>
                 </div>
+
+                <!-- 自訂模型名稱輸入框 (預設隱藏) -->
+                <input id="input-custom-model" type="text" placeholder="請輸入自訂 Gemini 模型代號 (如 gemini-3.7-flash 或 gemini-4.0-flash)..." 
+                  class="hidden w-full px-3 py-1.5 text-xs rounded-lg border border-accent-400 bg-accent-50/50 text-slate-900 focus:outline-none focus:ring-2 focus:ring-accent-500">
 
                 <div class="flex items-center gap-2 pt-1 flex-wrap sm:flex-nowrap">
                   <!-- 自動解析按鈕 (需Key) -->
@@ -273,6 +289,11 @@
                     <i class="fa-regular fa-copy text-teal-600"></i>
                     <span>免Key複製反推指令</span>
                   </button>
+                </div>
+
+                <div id="vision-model-status" class="text-[11px] text-slate-500 hidden flex items-center gap-1">
+                  <i class="fa-solid fa-circle-check text-emerald-500"></i>
+                  <span>目前運作模型：<strong id="vision-model-name" class="text-teal-800 font-mono">auto</strong></span>
                 </div>
               </div>
             </div>
@@ -819,9 +840,13 @@
     const visionPreviewPlaceholder = document.getElementById('vision-preview-placeholder');
     const inputGeminiKey = document.getElementById('input-gemini-key');
     const btnToggleKeyVis = document.getElementById('btn-toggle-key-vis');
+    const selectGeminiModel = document.getElementById('select-gemini-model');
+    const inputCustomModel = document.getElementById('input-custom-model');
     const btnAnalyzeImage = document.getElementById('btn-analyze-image');
     const btnAnalyzeText = document.getElementById('btn-analyze-text');
     const btnCopyReversePrompt = document.getElementById('btn-copy-reverse-prompt');
+    const visionModelStatus = document.getElementById('vision-model-status');
+    const visionModelName = document.getElementById('vision-model-name');
     
     const selectTargetAudience = document.getElementById('select-target-audience');
     const inputCustomAudience = document.getElementById('input-custom-audience');
@@ -1329,7 +1354,44 @@
       });
     });
 
-    // 呼叫 Gemini Vision API 分析
+    // 監聽自訂模型選單
+    selectGeminiModel.addEventListener('change', () => {
+      if (selectGeminiModel.value === '__custom__') {
+        inputCustomModel.classList.remove('hidden');
+        inputCustomModel.focus();
+      } else {
+        inputCustomModel.classList.add('hidden');
+      }
+    });
+
+    // 核心：動態獲取帳號支援的最新可用 Flash 模型清單 (長治久安機制)
+    async function getAvailableGeminiModels(apiKey) {
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+        if (!res.ok) return null;
+        const data = await res.json();
+        if (!data.models || !Array.isArray(data.models)) return null;
+
+        // 篩選出支援 generateContent 且為 gemini 系列的模型名稱
+        const validModels = data.models
+          .filter(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes('generateContent'))
+          .map(m => m.name.replace('models/', ''));
+
+        // 優先挑選 flash 模型（排除 exp 或 thinking 實驗性模型）
+        const flashModels = validModels.filter(m => m.includes('flash') && !m.includes('exp') && !m.includes('thinking'));
+        if (flashModels.length > 0) {
+          // 降冪排序，把最新版本排前面
+          flashModels.sort((a, b) => b.localeCompare(a, undefined, { numeric: true, sensitivity: 'base' }));
+          return flashModels;
+        }
+
+        return validModels;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // 呼叫 Gemini Vision API 分析（長治久安：自動探測 + 階梯式容錯降級）
     btnAnalyzeImage.addEventListener('click', async () => {
       if (!currentVisionBase64) {
         showToast('請先上傳或貼上參考圖片！', 'warning');
@@ -1346,48 +1408,105 @@
       // UI 載入中狀態
       btnAnalyzeImage.disabled = true;
       btnAnalyzeText.textContent = '⏳ AI 正在深度分析畫面中...';
+      visionModelStatus.classList.add('hidden');
 
-      try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{
-              parts: [
-                { text: "請以繁體中文詳細分析這張圖片，提煉出適合用於校園海報/宣導圖卡生圖的「主要視覺主體描述」。要求：聚焦於人物角色動作、核心物體、場景氛圍與關鍵構圖元素，字數約50-100字，文字精練流暢，適合做為 AI 繪圖提示詞的主體設定。請直接輸出這段描述文字，嚴禁包含任何開頭問候、前言或結尾廢話。" },
-                { inline_data: { mime_type: currentVisionMimeType || 'image/jpeg', data: currentVisionBase64 } }
-              ]
-            }]
-          })
-        });
+      // 決定候選模型陣列
+      let candidateModels = [];
+      const selectedModelChoice = selectGeminiModel.value;
 
-        if (!response.ok) {
-          const errData = await response.json().catch(() => ({}));
-          throw new Error(errData.error?.message || `HTTP ${response.status}`);
+      if (selectedModelChoice === '__custom__') {
+        const customName = inputCustomModel.value.trim();
+        if (!customName) {
+          showToast('請輸入自訂的模型名稱！', 'warning');
+          btnAnalyzeImage.disabled = false;
+          btnAnalyzeText.textContent = '⚡ AI 自動分析並填入主體描述';
+          inputCustomModel.focus();
+          return;
         }
-
-        const resData = await response.json();
-        const generatedText = resData.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-
-        if (!generatedText) {
-          throw new Error('未能取得分析文字，請確認圖片或金鑰是否有效。');
+        candidateModels = [customName];
+      } else if (selectedModelChoice !== 'auto') {
+        candidateModels = [selectedModelChoice];
+      } else {
+        // auto 模式：先嘗試即時探測線上支援的最新模型清單
+        btnAnalyzeText.textContent = '🔍 正在偵測最新可用 Gemini 模型...';
+        const dynamicModels = await getAvailableGeminiModels(apiKey);
+        if (dynamicModels && dynamicModels.length > 0) {
+          candidateModels = dynamicModels;
+        } else {
+          // 備用階梯陣列（從最新 3.7 / 3.0 / 2.5 / 2.0 依序降級嘗試）
+          candidateModels = [
+            'gemini-3.7-flash',
+            'gemini-3.5-flash',
+            'gemini-3.0-flash',
+            'gemini-2.5-flash',
+            'gemini-2.0-flash',
+            'gemini-1.5-flash',
+            'gemini-1.5-flash-latest',
+            'gemini-flash'
+          ];
         }
+      }
 
+      const promptText = "請以繁體中文詳細分析這張圖片，提煉出適合用於校園海報/宣導圖卡生圖的「主要視覺主體描述」。要求：聚焦於人物角色動作、核心物體、場景氛圍與關鍵構圖元素，字數約50-100字，文字精練流暢，適合做為 AI 繪圖提示詞的主體設定。請直接輸出這段描述文字，嚴禁包含任何開頭問候、前言或結尾廢話。";
+
+      let lastError = null;
+      let successModel = '';
+      let generatedText = '';
+
+      // 階梯式嘗試候選模型（遇到失敗自動嘗試下一個，直到成功）
+      for (const modelName of candidateModels) {
+        btnAnalyzeText.textContent = `⏳ 正在使用 ${modelName} 分析中...`;
+        try {
+          const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{
+                parts: [
+                  { text: promptText },
+                  { inline_data: { mime_type: currentVisionMimeType || 'image/jpeg', data: currentVisionBase64 } }
+                ]
+              }]
+            })
+          });
+
+          if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            lastError = errData.error?.message || `HTTP ${response.status}`;
+            continue; // 自動嘗試下一個模型
+          }
+
+          const resData = await response.json();
+          generatedText = resData.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+          if (generatedText) {
+            successModel = modelName;
+            break; // 成功！跳出迴圈
+          }
+        } catch (err) {
+          lastError = err.message;
+        }
+      }
+
+      if (generatedText && successModel) {
         // 自動填入主要視覺主體描述
         inputVisualSubject.value = generatedText;
         triggerGlowEffect();
-        showToast('🎉 AI 圖像逆向分析完成！已自動填入主要視覺主體描述。', 'success');
+        
+        // 顯示使用的成功模型標籤
+        visionModelName.textContent = successModel;
+        visionModelStatus.classList.remove('hidden');
+
+        showToast(`🎉 成功透過 ${successModel} 解析完成！已填入主體描述。`, 'success');
 
         // 自動重新組裝生圖提示詞
         generatePrompt();
-
-      } catch (err) {
-        console.error(err);
-        showToast(`分析失敗：${err.message}`, 'error');
-      } finally {
-        btnAnalyzeImage.disabled = false;
-        btnAnalyzeText.textContent = '⚡ AI 自動分析並填入主體描述';
+      } else {
+        showToast(`分析失敗：${lastError || '未能解析圖片，請檢查 API Key 或改用免Key複製指令'}`, 'error');
       }
+
+      btnAnalyzeImage.disabled = false;
+      btnAnalyzeText.textContent = '⚡ AI 自動分析並填入主體描述';
     });
 
     // ================= 事件綁定 =================
