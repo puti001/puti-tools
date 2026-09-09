@@ -202,10 +202,335 @@
         box-shadow: none !important;
       }
     }
-    @media screen {
-      .print-only {
-        display: none !important;
-      }
+    /* ================= 教室大屏專屬配色與全域等比例字級系統 ================= */
+    #bigScreenModal {
+      --bs-font-essay: 28px;
+      --bs-font-q-body: 24px;
+      --bs-font-struct-title: 22px;
+      --bs-font-struct-body: 19px;
+      --bs-font-vocab: 18px;
+    }
+    .bs-font-essay { font-size: var(--bs-font-essay); }
+    .bs-font-q-body { font-size: var(--bs-font-q-body); }
+    .bs-font-struct-title { font-size: var(--bs-font-struct-title); }
+    .bs-font-struct-body { font-size: var(--bs-font-struct-body); }
+    .bs-font-vocab { font-size: var(--bs-font-vocab); }
+
+    /* 1. 教室亮色（白底黑字，日間投影首選） */
+    #bigScreenModal[data-bs-theme="light"] {
+      background-color: #F8FAFC !important;
+      color: #0F172A !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-topbar {
+      background-color: #FFFFFF !important;
+      border-color: #CBD5E1 !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+      color: #0F172A !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-title-text {
+      color: #0F172A !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-card {
+      background-color: #FFFFFF !important;
+      border-color: #CBD5E1 !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05) !important;
+      color: #0F172A !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-card-inner {
+      background-color: #F1F5F9 !important;
+      border-color: #E2E8F0 !important;
+      color: #0F172A !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-text-main {
+      color: #0F172A !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-text-muted {
+      color: #475569 !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-btn-ctrl {
+      background-color: #F1F5F9 !important;
+      border-color: #CBD5E1 !important;
+      color: #1E293B !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-btn-ctrl:hover {
+      background-color: #E2E8F0 !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-q-box {
+      background-color: #FFFFFF !important;
+      border-color: #CBD5E1 !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-q-box:hover {
+      background-color: #F8FAFC !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-struct-card {
+      background-color: #FFFFFF !important;
+      border-color: #CBD5E1 !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-struct-qi {
+      background-color: #FEF3C7 !important;
+      border-color: #FDE68A !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-struct-qi span {
+      color: #B45309 !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-struct-cheng {
+      background-color: #CCFBF1 !important;
+      border-color: #99F6E4 !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-struct-cheng span {
+      color: #0F766E !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-struct-zhuan {
+      background-color: #E0E7FF !important;
+      border-color: #C7D2FE !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-struct-zhuan span {
+      color: #4338CA !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-struct-he {
+      background-color: #FFE4E6 !important;
+      border-color: #FECDD3 !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-struct-he span {
+      color: #BE123C !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-struct-body {
+      color: #1E293B !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-vocab-idiom {
+      background-color: #E0F2FE !important;
+      border-color: #BAE6FD !important;
+      color: #0369A1 !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-vocab-idiom:hover {
+      background-color: #0284C7 !important;
+      color: #FFFFFF !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-vocab-phrase {
+      background-color: #F1F5F9 !important;
+      border-color: #CBD5E1 !important;
+      color: #334155 !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-vocab-phrase:hover {
+      background-color: #E2E8F0 !important;
+      color: #0F172A !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-essay-para {
+      color: #0F172A !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-standard-box {
+      background-color: #FFFBEB !important;
+      border-color: #FDE68A !important;
+      color: #78350F !important;
+    }
+    #bigScreenModal[data-bs-theme="light"] .bs-status-bar {
+      color: #64748B !important;
+    }
+
+    /* 2. 柔和米白（護眼明色） */
+    #bigScreenModal[data-bs-theme="warm"] {
+      background-color: #FAF6ED !important;
+      color: #2D241E !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-topbar {
+      background-color: #F3ECE0 !important;
+      border-color: #DFD5C4 !important;
+      box-shadow: 0 4px 20px rgba(45, 36, 30, 0.08) !important;
+      color: #2D241E !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-title-text {
+      color: #2D241E !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-card {
+      background-color: #FFFFFF !important;
+      border-color: #EAE1D1 !important;
+      box-shadow: 0 4px 16px rgba(45, 36, 30, 0.05) !important;
+      color: #2D241E !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-card-inner {
+      background-color: #F7F1E5 !important;
+      border-color: #E5DAC6 !important;
+      color: #2D241E !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-text-main {
+      color: #2D241E !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-text-muted {
+      color: #68574D !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-btn-ctrl {
+      background-color: #EAE1D1 !important;
+      border-color: #DACDB6 !important;
+      color: #2D241E !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-btn-ctrl:hover {
+      background-color: #DACDB6 !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-q-box {
+      background-color: #FAF4E8 !important;
+      border-color: #E8DDC9 !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-q-box:hover {
+      background-color: #F3EADB !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-struct-card {
+      background-color: #FAF4E8 !important;
+      border-color: #E8DDC9 !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-struct-qi {
+      background-color: #FEF3C7 !important;
+      border-color: #FDE68A !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-struct-qi span {
+      color: #92400E !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-struct-cheng {
+      background-color: #D1FAE5 !important;
+      border-color: #A7F3D0 !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-struct-cheng span {
+      color: #065F46 !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-struct-zhuan {
+      background-color: #EDE9FE !important;
+      border-color: #DDD6FE !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-struct-zhuan span {
+      color: #5B21B6 !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-struct-he {
+      background-color: #FFE4E6 !important;
+      border-color: #FECDD3 !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-struct-he span {
+      color: #9F1239 !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-struct-body {
+      color: #382D26 !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-vocab-idiom {
+      background-color: #E5F3EE !important;
+      border-color: #C2E2D6 !important;
+      color: #166534 !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-vocab-idiom:hover {
+      background-color: #15803D !important;
+      color: #FFFFFF !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-vocab-phrase {
+      background-color: #F4ECE0 !important;
+      border-color: #E2D7C5 !important;
+      color: #4A3E37 !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-vocab-phrase:hover {
+      background-color: #E5D9C4 !important;
+      color: #2D241E !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-essay-para {
+      color: #2D241E !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-standard-box {
+      background-color: #FFF7ED !important;
+      border-color: #FED7AA !important;
+      color: #7C2D12 !important;
+    }
+    #bigScreenModal[data-bs-theme="warm"] .bs-status-bar {
+      color: #8C7C70 !important;
+    }
+
+    /* 3. 沉浸深黑（暗室高對比） */
+    #bigScreenModal[data-bs-theme="dark"] {
+      background-color: #181514 !important;
+      color: #FFFDF9 !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-topbar {
+      background-color: #282221 !important;
+      border-color: #3D3534 !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+      color: #FFFDF9 !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-title-text {
+      color: #FFFDF9 !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-card {
+      background-color: #241E1E !important;
+      border-color: #3D3534 !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+      color: #FFFDF9 !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-card-inner {
+      background-color: #332C2B !important;
+      border-color: #483E3D !important;
+      color: #FFFDF9 !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-text-main {
+      color: #FFFDF9 !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-text-muted {
+      color: #C2B7AC !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-btn-ctrl {
+      background-color: #38302F !important;
+      border-color: #4D4240 !important;
+      color: #FFFDF9 !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-btn-ctrl:hover {
+      background-color: #4D4240 !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-q-box {
+      background-color: #332C2B !important;
+      border-color: #483E3D !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-q-box:hover {
+      background-color: #3D3534 !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-struct-card {
+      background-color: #332C2B !important;
+      border-color: #483E3D !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-struct-qi span {
+      color: #FBBF24 !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-struct-cheng span {
+      color: #2DD4BF !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-struct-zhuan span {
+      color: #A5B4FC !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-struct-he span {
+      color: #FDA4AF !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-struct-body {
+      color: #E5DFD5 !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-vocab-idiom {
+      background-color: rgba(20, 184, 166, 0.2) !important;
+      border-color: rgba(20, 184, 166, 0.3) !important;
+      color: #5EEAD4 !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-vocab-idiom:hover {
+      background-color: #14B8A6 !important;
+      color: #0F172A !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-vocab-phrase {
+      background-color: #332C2B !important;
+      border-color: #483E3D !important;
+      color: #E5DFD5 !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-vocab-phrase:hover {
+      background-color: #483E3D !important;
+      color: #FFFFFF !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-essay-para {
+      color: #FFFDF9 !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-standard-box {
+      background-color: #332C2B !important;
+      border-color: #483E3D !important;
+      color: #FDE68A !important;
+    }
+    #bigScreenModal[data-bs-theme="dark"] .bs-status-bar {
+      color: #9E9186 !important;
     }
   </style>
 </head>
@@ -404,139 +729,163 @@
   </main>
 
   <!-- ================= 教室大屏超大字模式 (Big Screen Modal) ================= -->
-  <div id="bigScreenModal" class="no-print fixed inset-0 z-50 bg-[#241E1E]/95 backdrop-blur-md hidden flex flex-col justify-between p-4 sm:p-8 overflow-hidden text-white">
+  <div id="bigScreenModal" class="no-print fixed inset-0 z-50 hidden flex flex-col justify-between p-3 sm:p-6 overflow-hidden transition-colors" data-bs-theme="light">
     
     <!-- 頂部操作列 -->
-    <div class="bg-[#332C2B] border border-[#483E3D] rounded-[24px] px-6 py-4 flex items-center justify-between shadow-2xl">
-      <div class="flex items-center gap-3.5 flex-wrap">
-        <span id="bs-grade-badge" class="px-3.5 py-1.5 rounded-full bg-amber-500/20 text-amber-300 font-black text-sm border border-amber-500/40">
+    <div class="bs-topbar rounded-[24px] px-5 py-3.5 flex flex-wrap items-center justify-between gap-3 shadow-xl border transition-colors shrink-0">
+      
+      <!-- 標題與標籤 -->
+      <div class="flex items-center gap-3 flex-wrap">
+        <span id="bs-grade-badge" class="px-3.5 py-1.5 rounded-full bg-amber-500/20 text-amber-600 font-black text-sm border border-amber-500/30">
           五年級
         </span>
-        <span id="bs-genre-badge" class="px-3.5 py-1.5 rounded-full bg-emerald-500/20 text-emerald-300 font-black text-sm border border-emerald-500/40">
+        <span id="bs-genre-badge" class="px-3.5 py-1.5 rounded-full bg-emerald-500/20 text-emerald-600 font-black text-sm border border-emerald-500/30">
           文體：論說文
         </span>
-        <h2 id="bs-title" class="text-2xl sm:text-3xl font-black tracking-tight text-white flex items-center gap-2">
+        <h2 id="bs-title" class="bs-title-text text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-2">
           題目名稱
         </h2>
       </div>
 
-      <!-- 控制按鈕 -->
-      <div class="flex items-center gap-3">
+      <!-- 控制按鈕組 -->
+      <div class="flex items-center gap-2.5 flex-wrap">
         
-        <!-- 字體縮放按鈕群 -->
-        <div class="flex items-center bg-[#443B3A] rounded-xl p-1 border border-[#594E4D]">
-          <button onclick="changeFontSize(-2)" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-[#594E4D] text-sm font-black text-amber-300" title="縮小字體">A-</button>
-          <span id="current-fontsize" class="text-xs font-mono px-2 text-[#E5DFD5]">22px</span>
-          <button onclick="changeFontSize(2)" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-[#594E4D] text-sm font-black text-amber-300" title="放大字體">A+</button>
+        <!-- 大屏配色切換器 (白底黑字 / 柔和米白 / 沉浸深黑) -->
+        <div class="flex items-center rounded-xl p-1 border bs-card-inner gap-1" title="大屏教室配色切換">
+          <button id="btn-bs-theme-light" onclick="setBigScreenTheme('light')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white shadow-sm text-slate-800 ring-2 ring-amber-400" title="白底黑字（日間教室投影推薦）">
+            <span>☀️ 亮白教室</span>
+          </button>
+          <button id="btn-bs-theme-warm" onclick="setBigScreenTheme('warm')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-amber-900 opacity-60 hover:opacity-100" title="柔和米白（護眼明色）">
+            <span>🌾 柔和米白</span>
+          </button>
+          <button id="btn-bs-theme-dark" onclick="setBigScreenTheme('dark')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-200 opacity-60 hover:opacity-100" title="沉浸深黑（暗室投影）">
+            <span>🌙 沉浸暗黑</span>
+          </button>
         </div>
 
-        <button onclick="copyTopicAiPrompt(currentTopicIndex, event)" class="px-3.5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold flex items-center gap-1.5 shadow-md transition" title="複製此題 AI 生成提示詞，可貼至 ChatGPT / Claude / Gemini 自行生成更多範文">
+        <!-- 快速錨點導航 -->
+        <div class="hidden xl:flex items-center rounded-xl p-1 border bs-card-inner text-xs font-bold gap-1">
+          <button onclick="scrollToBsSection('bs-section-questions')" class="px-2.5 py-1.5 rounded-lg hover:bg-amber-500/20 hover:text-amber-500 transition">🎯 審題</button>
+          <button onclick="scrollToBsSection('bs-section-structure')" class="px-2.5 py-1.5 rounded-lg hover:bg-emerald-500/20 hover:text-emerald-500 transition">🗺️ 大綱</button>
+          <button onclick="scrollToBsSection('bs-section-vocab')" class="px-2.5 py-1.5 rounded-lg hover:bg-teal-500/20 hover:text-teal-500 transition">💡 好詞</button>
+          <button onclick="scrollToBsSection('bs-section-essay')" class="px-2.5 py-1.5 rounded-lg hover:bg-purple-500/20 hover:text-purple-500 transition">📜 範文</button>
+        </div>
+
+        <!-- 全域字體等比例縮放群組 -->
+        <div class="flex items-center rounded-xl p-1 border bs-card-inner">
+          <button onclick="changeFontSize(-2)" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-black/10 dark:hover:bg-white/10 text-sm font-black text-amber-500" title="全域縮小字體 (鍵盤 -)">A-</button>
+          <span id="current-fontsize" class="text-xs font-mono px-2 font-bold bs-text-muted" title="目前全域基準字級">28px</span>
+          <button onclick="changeFontSize(2)" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-black/10 dark:hover:bg-white/10 text-sm font-black text-amber-500" title="全域放大字體 (鍵盤 +)">A+</button>
+        </div>
+
+        <!-- 複製 AI 出題提示詞 -->
+        <button onclick="copyTopicAiPrompt(currentTopicIndex, event)" class="px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-sm font-bold flex items-center gap-1.5 shadow-md transition" title="複製此題專屬 AI 出題提示詞，可貼至 ChatGPT / Claude / Gemini 自行生成更多範文">
           <i data-lucide="sparkles" class="w-4 h-4 text-purple-200"></i>
           <span class="hidden sm:inline">複製 AI 提示詞</span>
         </button>
 
-        <button onclick="openWorksheetModal(currentTopicIndex)" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-bold flex items-center gap-2 shadow-md hover:opacity-95 transition">
+        <!-- 印學習單 -->
+        <button onclick="openWorksheetModal(currentTopicIndex)" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-bold flex items-center gap-1.5 shadow-md hover:opacity-95 transition">
           <i data-lucide="printer" class="w-4 h-4"></i>
-          <span>印引導學習單</span>
+          <span class="hidden sm:inline">印學習單</span>
         </button>
 
-        <button onclick="navigateTopic(-1)" class="w-10 h-10 rounded-xl bg-[#443B3A] hover:bg-[#594E4D] text-white flex items-center justify-center transition" title="上一題 (←)">
-          <i data-lucide="chevron-left" class="w-6 h-6"></i>
+        <!-- 換題與關閉 -->
+        <button onclick="navigateTopic(-1)" class="w-9 h-9 rounded-xl bs-btn-ctrl border flex items-center justify-center transition" title="上一題 (←)">
+          <i data-lucide="chevron-left" class="w-5 h-5"></i>
         </button>
-        <button onclick="navigateTopic(1)" class="w-10 h-10 rounded-xl bg-[#443B3A] hover:bg-[#594E4D] text-white flex items-center justify-center transition" title="下一題 (→)">
-          <i data-lucide="chevron-right" class="w-6 h-6"></i>
+        <button onclick="navigateTopic(1)" class="w-9 h-9 rounded-xl bs-btn-ctrl border flex items-center justify-center transition" title="下一題 (→)">
+          <i data-lucide="chevron-right" class="w-5 h-5"></i>
         </button>
-
-        <button onclick="closeBigScreen()" class="w-10 h-10 rounded-xl bg-red-500/20 hover:bg-red-500 text-red-300 hover:text-white flex items-center justify-center transition ml-1" title="退出大屏 (Esc)">
-          <i data-lucide="x" class="w-6 h-6"></i>
+        <button onclick="closeBigScreen()" class="w-9 h-9 rounded-xl bg-red-500/20 hover:bg-red-500 text-red-500 hover:text-white flex items-center justify-center transition ml-1" title="退出大屏 (Esc)">
+          <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
     </div>
 
-    <!-- 大屏內容雙欄區 -->
-    <div class="flex-1 my-5 grid grid-cols-1 lg:grid-cols-12 gap-6 overflow-y-auto pr-1">
+    <!-- 大屏內容單欄垂直全寬排版區 (上下排列，全寬展開，範文移到下方) -->
+    <div id="bs-scroll-container" class="flex-1 my-4 overflow-y-auto pr-1 sm:pr-3 space-y-6 max-w-6xl w-full mx-auto scroll-smooth">
       
-      <!-- 左欄：大屏審題提問 ＋ 起承轉合結構心智圖 (7 欄) -->
-      <div class="lg:col-span-7 space-y-5 flex flex-col">
-        
-        <!-- 審題引導 3 問 -->
-        <div class="bg-[#332C2B] border border-[#483E3D] rounded-[28px] p-6 shadow-xl">
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-base sm:text-lg font-black text-amber-300 flex items-center gap-2">
-              <i data-lucide="message-circle-question" class="w-5 h-5 text-amber-400"></i>
-              大屏課堂引導・審題破題 3 步問
-            </h3>
-            <button onclick="toggleAllQuestions()" class="text-xs text-[#C2B7AC] hover:text-white flex items-center gap-1.5 bg-[#443B3A] px-3 py-1.5 rounded-full">
-              <i data-lucide="eye" class="w-4 h-4"></i> <span id="btn-toggle-q">全部顯示</span>
-            </button>
-          </div>
-          <div id="bs-questions" class="space-y-3.5">
-            <!-- 動態注入題目提問 -->
-          </div>
-        </div>
-
-        <!-- 四段結構心智導圖 -->
-        <div class="bg-[#332C2B] border border-[#483E3D] rounded-[28px] p-6 shadow-xl flex-1 flex flex-col">
-          <h3 class="text-base sm:text-lg font-black text-emerald-300 flex items-center gap-2 mb-4">
-            <i data-lucide="git-fork" class="w-5 h-5 text-emerald-400"></i>
-            四段思維大綱地圖（起承轉合 / 總分總）
+      <!-- 區塊 1：審題破題 3 步問 -->
+      <section id="bs-section-questions" class="bs-card rounded-[28px] p-6 sm:p-7 shadow-lg transition-colors border">
+        <div class="flex items-center justify-between mb-5 flex-wrap gap-2">
+          <h3 class="text-xl sm:text-2xl font-black text-amber-500 flex items-center gap-2.5">
+            <i data-lucide="message-circle-question" class="w-6 h-6 text-amber-500"></i>
+            大屏課堂引導・審題破題 3 步問
           </h3>
-          <div id="bs-structure" class="grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1">
-            <!-- 動態注入結構卡片 -->
-          </div>
+          <button onclick="toggleAllQuestions()" class="text-sm bs-text-muted hover:bs-text-main flex items-center gap-1.5 bs-card-inner border px-3.5 py-1.5 rounded-full transition">
+            <i data-lucide="eye" class="w-4 h-4"></i> <span id="btn-toggle-q">全部顯示</span>
+          </button>
         </div>
-
-        <!-- 詞庫錦囊 -->
-        <div class="bg-[#332C2B] border border-[#483E3D] rounded-[24px] p-5 shadow-xl">
-          <h3 class="text-sm font-black text-amber-200 flex items-center gap-2 mb-3">
-            <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i>
-            寫作好詞錦囊庫（隨點即複製）：
-          </h3>
-          <div id="bs-vocabulary" class="flex flex-wrap gap-2">
-            <!-- 動態注入成語詞彙 -->
-          </div>
+        <div id="bs-questions" class="space-y-4">
+          <!-- 動態注入題目提問 -->
         </div>
+      </section>
 
-      </div>
+      <!-- 區塊 2：起承轉合四段思維大綱地圖 -->
+      <section id="bs-section-structure" class="bs-card rounded-[28px] p-6 sm:p-7 shadow-lg transition-colors border">
+        <h3 class="text-xl sm:text-2xl font-black text-emerald-600 flex items-center gap-2.5 mb-5">
+          <i data-lucide="git-fork" class="w-6 h-6 text-emerald-500"></i>
+          起承轉合四段思維大綱地圖
+        </h3>
+        <div id="bs-structure" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          <!-- 動態注入結構卡片 -->
+        </div>
+      </section>
 
-      <!-- 右欄：雙軌範文超大字展示區 (5 欄) -->
-      <div class="lg:col-span-5 bg-[#332C2B] border border-[#483E3D] rounded-[28px] p-6 shadow-xl flex flex-col">
+      <!-- 區塊 3：寫作好詞錦囊庫 -->
+      <section id="bs-section-vocab" class="bs-card rounded-[28px] p-6 sm:p-7 shadow-lg transition-colors border">
+        <h3 class="text-lg sm:text-xl font-black text-teal-600 flex items-center gap-2.5 mb-4">
+          <i data-lucide="sparkles" class="w-6 h-6 text-teal-500"></i>
+          寫作好詞錦囊庫（隨點即複製）：
+        </h3>
+        <div id="bs-vocabulary" class="flex flex-wrap gap-2.5">
+          <!-- 動態注入成語詞彙 -->
+        </div>
+      </section>
+
+      <!-- 區塊 4：雙軌範文超大字展示區 (移到下方，全寬展開！) -->
+      <section id="bs-section-essay" class="bs-card rounded-[28px] p-6 sm:p-8 shadow-xl transition-colors border">
         
         <!-- 範文標籤頁切換 -->
-        <div class="flex items-center justify-between pb-4 border-b border-[#483E3D]">
-          <div class="flex items-center gap-2.5">
-            <button onclick="switchEssayTab('advanced')" id="btn-tab-adv" class="px-4 py-2 rounded-xl text-sm font-black bg-emerald-500 text-slate-900 shadow-md transition">
-              ⭐ 特優亮點範文
+        <div class="flex items-center justify-between pb-5 border-b border-black/10 dark:border-white/10 flex-wrap gap-3">
+          <div class="flex items-center gap-3">
+            <button onclick="switchEssayTab('advanced')" id="btn-tab-adv" class="px-5 py-2.5 rounded-xl text-base font-black bg-emerald-500 text-white shadow-md transition flex items-center gap-2">
+              <i data-lucide="award" class="w-5 h-5"></i>
+              <span>⭐ 特優亮點範文（五感摹寫・精準修辭・年級規範）</span>
             </button>
-            <button onclick="switchEssayTab('standard')" id="btn-tab-std" class="px-4 py-2 rounded-xl text-sm font-black bg-[#443B3A] text-[#C2B7AC] hover:text-white transition">
-              ⚠️ 普通流水帳 (抓蟲)
+            <button onclick="switchEssayTab('standard')" id="btn-tab-std" class="px-5 py-2.5 rounded-xl text-base font-black bs-btn-ctrl bs-text-muted hover:bs-text-main transition flex items-center gap-2">
+              <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+              <span>⚠️ 普通流水帳示範（全班抓蟲診斷改寫）</span>
             </button>
           </div>
-          <span class="text-xs text-[#9E9186] font-mono">大屏朗讀觀摩</span>
+          <span class="text-sm bs-text-muted font-mono bg-black/5 dark:bg-white/5 px-3 py-1 rounded-full">大屏朗讀觀摩</span>
         </div>
 
-        <!-- 範文內容本體 -->
-        <div class="flex-1 overflow-y-auto mt-5 pr-2">
-          <div id="bs-essay-content" class="text-[#FFFDF9] leading-[2.1] space-y-4 text-[22px] font-maru transition-all">
+        <!-- 範文內容本體 (超大字、全寬展開) -->
+        <div class="mt-6">
+          <div id="bs-essay-content" class="leading-[2.4] space-y-6 font-maru transition-all">
             <!-- 動態注入範文內容 -->
           </div>
         </div>
 
         <!-- 延伸題推薦 -->
-        <div class="mt-5 pt-4 border-t border-[#483E3D] flex items-center gap-2.5 text-xs">
-          <span class="text-amber-300 font-bold whitespace-nowrap">相關延伸：</span>
-          <div id="bs-related-topics" class="flex flex-wrap gap-2 overflow-hidden">
+        <div class="mt-8 pt-5 border-t border-black/10 dark:border-white/10 flex items-center gap-3 text-sm flex-wrap">
+          <span class="font-black text-amber-500 whitespace-nowrap flex items-center gap-1.5">
+            <i data-lucide="compass" class="w-4 h-4"></i> 相關延伸推薦：
+          </span>
+          <div id="bs-related-topics" class="flex flex-wrap gap-2">
             <!-- 動態注入延伸題 -->
           </div>
         </div>
 
-      </div>
+      </section>
 
     </div>
 
     <!-- 底部狀態列 -->
-    <div class="text-center text-xs text-[#9E9186] font-medium py-1">
-      Puti-AI 教室大屏教學模式 • 支援觸控螢幕滑動與鍵盤方向鍵 (← / → 切換題目，Esc 退出)
+    <div class="bs-status-bar text-center text-xs font-medium py-1 shrink-0">
+      Puti-AI 教室大屏教學模式 • 支援上下滾動、觸控螢幕滑動與鍵盤方向鍵 (← / → 切換題目，+ / - 縮放字體，Esc 退出)
     </div>
   </div>
 
@@ -731,10 +1080,12 @@
       // 鍵盤快捷鍵
       window.addEventListener('keydown', (e) => {
         const modal = document.getElementById('bigScreenModal');
-        if (!modal.classList.contains('hidden')) {
+        if (modal && !modal.classList.contains('hidden')) {
           if (e.key === 'ArrowLeft') navigateTopic(-1);
-          if (e.key === 'ArrowRight') navigateTopic(1);
-          if (e.key === 'Escape') closeBigScreen();
+          else if (e.key === 'ArrowRight') navigateTopic(1);
+          else if (e.key === 'Escape') closeBigScreen();
+          else if (e.key === '+' || e.key === '=') changeFontSize(2);
+          else if (e.key === '-' || e.key === '_') changeFontSize(-2);
         }
       });
     });
@@ -909,11 +1260,75 @@
       lucide.createIcons();
     }
 
+    // ================= 教室大屏配色與全域等比例字級控制 =================
+    let currentBigScreenTheme = 'light';
+    let currentBigScreenFontSizeOffset = 0; // -6 ~ +22 步進，預設 0
+
+    function setBigScreenTheme(theme) {
+      currentBigScreenTheme = theme;
+      const modal = document.getElementById('bigScreenModal');
+      if (modal) {
+        modal.setAttribute('data-bs-theme', theme);
+      }
+      localStorage.setItem('puti_bigscreen_theme', theme);
+
+      // 更新大屏配色按鈕狀態
+      ['light', 'warm', 'dark'].forEach(t => {
+        const btn = document.getElementById(`btn-bs-theme-${t}`);
+        if (btn) {
+          if (t === theme) {
+            btn.classList.add('ring-2', 'ring-amber-400', 'font-black');
+            btn.classList.remove('opacity-60');
+          } else {
+            btn.classList.remove('ring-2', 'ring-amber-400', 'font-black');
+            btn.classList.add('opacity-60');
+          }
+        }
+      });
+    }
+
+    function changeFontSize(delta) {
+      currentBigScreenFontSizeOffset = Math.max(-6, Math.min(22, currentBigScreenFontSizeOffset + delta));
+      applyBigScreenFontSizes();
+    }
+
+    function applyBigScreenFontSizes() {
+      const modal = document.getElementById('bigScreenModal');
+      if (!modal) return;
+
+      const baseEssay = 28 + currentBigScreenFontSizeOffset;
+      const baseQ = 24 + Math.round(currentBigScreenFontSizeOffset * 0.85);
+      const baseStructTitle = 22 + Math.round(currentBigScreenFontSizeOffset * 0.65);
+      const baseStructBody = 19 + Math.round(currentBigScreenFontSizeOffset * 0.7);
+      const baseVocab = 18 + Math.round(currentBigScreenFontSizeOffset * 0.6);
+
+      modal.style.setProperty('--bs-font-essay', `${baseEssay}px`);
+      modal.style.setProperty('--bs-font-q-body', `${baseQ}px`);
+      modal.style.setProperty('--bs-font-struct-title', `${baseStructTitle}px`);
+      modal.style.setProperty('--bs-font-struct-body', `${baseStructBody}px`);
+      modal.style.setProperty('--bs-font-vocab', `${baseVocab}px`);
+
+      const indicator = document.getElementById('current-fontsize');
+      if (indicator) indicator.innerText = `${baseEssay}px`;
+    }
+
+    function scrollToBsSection(sectionId) {
+      const el = document.getElementById(sectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
     // ================= 大屏教學模式邏輯 =================
     function openBigScreen(index) {
       currentTopicIndex = index;
       const topic = TOPICS_DATA[currentTopicIndex];
       if (!topic) return;
+
+      // 載入偏好大屏主題與字級
+      const savedBsTheme = localStorage.getItem('puti_bigscreen_theme') || 'light';
+      setBigScreenTheme(savedBsTheme);
+      applyBigScreenFontSizes();
 
       document.getElementById('bs-grade-badge').innerText = topic.grade;
       document.getElementById('bs-genre-badge').innerText = `文體：${topic.majorGenre}`;
@@ -924,63 +1339,69 @@
       document.getElementById('btn-toggle-q').innerText = "全部顯示";
       renderBigScreenQuestions(topic.questions);
 
-      // 起承轉合心智圖
+      // 起承轉合思維大綱地圖 (4 欄全寬大卡片)
       const structureContainer = document.getElementById('bs-structure');
       const struct = topic.structure;
       structureContainer.innerHTML = `
-        <div class="bg-[#443B3A] border border-[#594E4D] rounded-2xl p-4 text-sm space-y-2">
-          <span class="font-black text-amber-300 text-base block">${struct['起'].split('】')[0]}】</span>
-          <p class="text-[#E5DFD5] leading-relaxed">${struct['起'].split('】')[1] || struct['起']}</p>
+        <div class="bs-struct-card bs-struct-qi border rounded-2xl p-5 shadow-sm space-y-3 transition-colors">
+          <span class="bs-font-struct-title font-black block">${struct['起'].split('】')[0]}】</span>
+          <p class="bs-struct-body bs-font-struct-body leading-relaxed">${struct['起'].split('】')[1] || struct['起']}</p>
         </div>
-        <div class="bg-[#443B3A] border border-[#594E4D] rounded-2xl p-4 text-sm space-y-2">
-          <span class="font-black text-teal-300 text-base block">${struct['承'].split('】')[0]}】</span>
-          <p class="text-[#E5DFD5] leading-relaxed">${struct['承'].split('】')[1] || struct['承']}</p>
+        <div class="bs-struct-card bs-struct-cheng border rounded-2xl p-5 shadow-sm space-y-3 transition-colors">
+          <span class="bs-font-struct-title font-black block">${struct['承'].split('】')[0]}】</span>
+          <p class="bs-struct-body bs-font-struct-body leading-relaxed">${struct['承'].split('】')[1] || struct['承']}</p>
         </div>
-        <div class="bg-[#443B3A] border border-[#594E4D] rounded-2xl p-4 text-sm space-y-2">
-          <span class="font-black text-indigo-300 text-base block">${struct['轉'].split('】')[0]}】</span>
-          <p class="text-[#E5DFD5] leading-relaxed">${struct['轉'].split('】')[1] || struct['轉']}</p>
+        <div class="bs-struct-card bs-struct-zhuan border rounded-2xl p-5 shadow-sm space-y-3 transition-colors">
+          <span class="bs-font-struct-title font-black block">${struct['轉'].split('】')[0]}】</span>
+          <p class="bs-struct-body bs-font-struct-body leading-relaxed">${struct['轉'].split('】')[1] || struct['轉']}</p>
         </div>
-        <div class="bg-[#443B3A] border border-[#594E4D] rounded-2xl p-4 text-sm space-y-2">
-          <span class="font-black text-rose-300 text-base block">${struct['合'].split('】')[0]}】</span>
-          <p class="text-[#E5DFD5] leading-relaxed">${struct['合'].split('】')[1] || struct['合']}</p>
+        <div class="bs-struct-card bs-struct-he border rounded-2xl p-5 shadow-sm space-y-3 transition-colors">
+          <span class="bs-font-struct-title font-black block">${struct['合'].split('】')[0]}】</span>
+          <p class="bs-struct-body bs-font-struct-body leading-relaxed">${struct['合'].split('】')[1] || struct['合']}</p>
         </div>
       `;
 
-      // 詞彙錦囊
+      // 詞彙錦囊 (全域字級 + 一鍵複製)
       const vocabContainer = document.getElementById('bs-vocabulary');
       const idioms = topic.vocabulary.idioms || [];
       const phrases = topic.vocabulary.phrases || [];
       vocabContainer.innerHTML = [
-        ...idioms.map(item => `<span class="px-3.5 py-1.5 rounded-xl bg-teal-500/20 text-teal-300 border border-teal-500/30 text-sm font-bold cursor-pointer hover:bg-teal-500 hover:text-slate-900 transition" onclick="copyVocab('${item}')">${item}</span>`),
-        ...phrases.map(item => `<span class="px-3.5 py-1.5 rounded-xl bg-[#443B3A] text-[#E5DFD5] border border-[#594E4D] text-sm cursor-pointer hover:bg-[#594E4D] transition" onclick="copyVocab('${item}')">${item}</span>`)
+        ...idioms.map(item => `<span class="bs-vocab-idiom bs-font-vocab px-4 py-2 rounded-xl border font-bold cursor-pointer transition shadow-sm" onclick="copyVocab('${item}')">${item}</span>`),
+        ...phrases.map(item => `<span class="bs-vocab-phrase bs-font-vocab px-4 py-2 rounded-xl border cursor-pointer transition shadow-sm" onclick="copyVocab('${item}')">${item}</span>`)
       ].join('');
 
       // 延伸題
       const relatedContainer = document.getElementById('bs-related-topics');
       relatedContainer.innerHTML = topic.relatedTopics.map(rel => `
-        <span class="px-3 py-1 rounded-full bg-[#443B3A] text-[#C2B7AC] text-xs hover:text-white cursor-pointer" onclick="searchForTopic('${rel}')">${rel}</span>
+        <span class="px-3.5 py-1.5 rounded-full bs-card-inner border bs-text-muted hover:bs-text-main text-xs cursor-pointer transition" onclick="searchForTopic('${rel}')">${rel}</span>
       `).join('');
 
       // 預設切換為特優示範版範文
       switchEssayTab('advanced');
 
       document.getElementById('bigScreenModal').classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+
+      // 滾動置頂
+      const scrollContainer = document.getElementById('bs-scroll-container');
+      if (scrollContainer) scrollContainer.scrollTop = 0;
+
       lucide.createIcons();
     }
 
     function renderBigScreenQuestions(questions) {
       const container = document.getElementById('bs-questions');
       container.innerHTML = questions.map((q, i) => `
-        <div class="bg-[#443B3A] border border-[#594E4D] rounded-2xl p-4 flex items-start justify-between gap-4 cursor-pointer hover:bg-[#4E4443] transition" onclick="toggleQuestionSingle(${i})">
-          <div class="flex items-start gap-3">
-            <span class="w-7 h-7 rounded-full bg-amber-400 text-slate-950 font-black text-sm flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
+        <div class="bs-q-box border rounded-2xl p-5 flex items-start justify-between gap-4 cursor-pointer transition shadow-sm" onclick="toggleQuestionSingle(${i})">
+          <div class="flex items-start gap-4 flex-1">
+            <span class="w-8 h-8 rounded-full bg-amber-500 text-white font-black text-base flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
               ${i+1}
             </span>
-            <p id="q-text-${i}" class="text-base sm:text-lg font-bold ${areQuestionsVisible ? 'text-[#FFFDF9]' : 'text-slate-500 blur-sm select-none'} transition-all leading-snug">
+            <p id="q-text-${i}" class="bs-font-q-body font-bold ${areQuestionsVisible ? 'bs-text-main' : 'text-slate-400 blur-sm select-none'} transition-all leading-relaxed">
               ${q}
             </p>
           </div>
-          <button class="text-[#C2B7AC] hover:text-white shrink-0 mt-1">
+          <button class="bs-text-muted hover:bs-text-main shrink-0 mt-1.5 p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/10" title="${areQuestionsVisible ? '點擊遮蔽' : '點擊揭示'}">
             <i data-lucide="${areQuestionsVisible ? 'eye-off' : 'eye'}" class="w-5 h-5"></i>
           </button>
         </div>
@@ -999,8 +1420,9 @@
       const el = document.getElementById(`q-text-${index}`);
       if (el) {
         el.classList.toggle('blur-sm');
-        el.classList.toggle('text-slate-500');
-        el.classList.toggle('text-[#FFFDF9]');
+        el.classList.toggle('text-slate-400');
+        el.classList.toggle('select-none');
+        el.classList.toggle('bs-text-main');
       }
     }
 
@@ -1010,39 +1432,39 @@
       const btnStd = document.getElementById('btn-tab-std');
       const contentEl = document.getElementById('bs-essay-content');
       const topic = TOPICS_DATA[currentTopicIndex];
+      if (!topic) return;
 
       if (tab === 'advanced') {
-        btnAdv.className = "px-4 py-2 rounded-xl text-sm font-black bg-emerald-500 text-slate-900 shadow-md transition";
-        btnStd.className = "px-4 py-2 rounded-xl text-sm font-black bg-[#443B3A] text-[#C2B7AC] hover:text-white transition";
+        btnAdv.className = "px-5 py-2.5 rounded-xl text-base font-black bg-emerald-500 text-white shadow-md transition flex items-center gap-2";
+        btnStd.className = "px-5 py-2.5 rounded-xl text-base font-black bs-btn-ctrl bs-text-muted hover:bs-text-main transition flex items-center gap-2";
         
         const paras = topic.essays.advanced.split('\n\n');
         contentEl.innerHTML = `
-          <div class="text-sm text-teal-300 font-bold mb-3 flex items-center gap-2">
-            <i data-lucide="check-circle-2" class="w-5 h-5"></i> 特優範文示範（【${topic.majorGenre}】五感摹寫、修辭與亮點細節）
+          <div class="text-base text-emerald-600 font-bold mb-3 flex items-center gap-2">
+            <i data-lucide="award" class="w-5 h-5 text-emerald-500"></i>
+            <span>特優範文示範（【${topic.majorGenre}】五感摹寫、修辭與年級標準字數）</span>
           </div>
-          ${paras.map(p => `<p class="leading-[2.2] indent-10 text-[#FFFDF9]">${p}</p>`).join('')}
+          <div class="space-y-5">
+            ${paras.map(p => `<p class="bs-essay-para bs-font-essay leading-[2.4] indent-10 font-maru transition-all">${p}</p>`).join('')}
+          </div>
         `;
       } else {
-        btnStd.className = "px-4 py-2 rounded-xl text-sm font-black bg-amber-400 text-slate-950 shadow-md transition";
-        btnAdv.className = "px-4 py-2 rounded-xl text-sm font-black bg-[#443B3A] text-[#C2B7AC] hover:text-white transition";
+        btnStd.className = "px-5 py-2.5 rounded-xl text-base font-black bg-amber-500 text-white shadow-md transition flex items-center gap-2";
+        btnAdv.className = "px-5 py-2.5 rounded-xl text-base font-black bs-btn-ctrl bs-text-muted hover:bs-text-main transition flex items-center gap-2";
 
         contentEl.innerHTML = `
-          <div class="text-sm text-amber-300 font-bold mb-3 flex items-center gap-2">
-            <i data-lucide="alert-triangle" class="w-5 h-5"></i> 普通流水帳示範（平鋪直敘，帶領全班診斷「哪裡可以改寫更好」）
+          <div class="text-base text-amber-600 font-bold mb-3 flex items-center gap-2">
+            <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-500"></i>
+            <span>普通流水帳示範（平鋪直敘，帶領全班診斷「哪裡可以改寫更好」）</span>
           </div>
-          <p class="leading-[2.2] indent-10 text-[#E5DFD5] bg-[#443B3A]/60 p-5 rounded-2xl border border-[#594E4D]">
-            ${topic.essays.standard}
-          </p>
+          <div class="bs-standard-box p-6 rounded-2xl border">
+            <p class="bs-essay-para bs-font-essay leading-[2.4] indent-10 font-maru transition-all">
+              ${topic.essays.standard}
+            </p>
+          </div>
         `;
       }
       lucide.createIcons();
-    }
-
-    function changeFontSize(delta) {
-      currentFontSizeOffset = Math.max(-4, Math.min(14, currentFontSizeOffset + delta));
-      const baseSize = 22 + currentFontSizeOffset;
-      document.getElementById('bs-essay-content').style.fontSize = `${baseSize}px`;
-      document.getElementById('current-fontsize').innerText = `${baseSize}px`;
     }
 
     function navigateTopic(direction) {
@@ -1054,6 +1476,7 @@
 
     function closeBigScreen() {
       document.getElementById('bigScreenModal').classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
     }
 
     function copyVocab(text) {
