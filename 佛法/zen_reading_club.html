@@ -631,12 +631,9 @@
       <button class="btn" id="bgmToggleBtn" onclick="toggleBgm()"><i class="fa-solid fa-music"></i> <span id="bgmLabel">作答音樂</span></button>
       <!-- 講者端專用按鈕 -->
       <button class="btn" id="resetGameBtn" style="display:none;" onclick="hostResetAll()"><i class="fa-solid fa-rotate-left"></i> 重置全場</button>
+      <button class="btn" id="fsBtn" style="display:none;" onclick="toggleFullscreen()"><i class="fa-solid fa-expand"></i> 全螢幕</button>
+    </div>
   </header>
-
-  <!-- 瀏覽器 Autoplay 解鎖提示條 (未手勢互動前醒目提示) -->
-  <div id="audioUnlockBanner" onclick="unlockAudio()" style="display:none; background: linear-gradient(135deg, #E07A5F 0%, #D46A4F 100%); color:#fff; text-align:center; padding:11px 18px; font-weight:800; font-size:1.05rem; cursor:pointer; box-shadow:0 4px 14px rgba(224,122,95,0.3); z-index:999; animation: pulseBanner 2s infinite;">
-    <i class="fa-solid fa-volume-high"></i> 🎵 現場作答音效已就緒，點擊此處或畫面任意處立即啟用！
-  </div>
 
   <main>
     <!-- 大螢幕講者主控端 (Host) -->
@@ -898,65 +895,33 @@
     let audioCtx = null;
     let bgmTimer = null;
     let bgmStep = 0;
-    let isBgmEnabled = true;
+    let isBgmEnabled = false; // 預設靜音，點擊右上角按鈕才開啟，保證絕對不影響任何版面與功能
 
-    // 輕快日系五聲暖心音階 (Marimba / Kalimba 木琴質感)
     const scaleFreqs = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
     const kahootPattern = [0, 2, 4, 2, 5, 4, 2, 1, 0, 4, 3, 2, 5, 4, 3, 2];
 
     function getAudioCtx() {
-      if (!audioCtx) {
-        const AudioClass = window.AudioContext || window.webkitAudioContext;
-        if (AudioClass) {
-          audioCtx = new AudioClass();
+      try {
+        if (!audioCtx) {
+          const AudioClass = window.AudioContext || window.webkitAudioContext;
+          if (AudioClass) audioCtx = new AudioClass();
         }
-      }
-      return audioCtx;
-    }
-
-    function showAudioUnlockBanner() {
-      const b = document.getElementById("audioUnlockBanner");
-      if (b && isBgmEnabled) b.style.display = "block";
-    }
-
-    function hideAudioUnlockBanner() {
-      const b = document.getElementById("audioUnlockBanner");
-      if (b) b.style.display = "none";
-    }
-
-    // 全域手勢解鎖音訊 (解決 Chrome/Edge/Safari Autoplay 限制)
-    function unlockAudio() {
-      const ctx = getAudioCtx();
-      if (!ctx) return;
-      if (ctx.state === 'suspended') {
-        ctx.resume().then(() => {
-          hideAudioUnlockBanner();
-          if (localState.status === 'answering' && isBgmEnabled && !bgmTimer) {
-            startKahootBGM();
-          }
-        }).catch(() => {});
-      } else if (ctx.state === 'running') {
-        hideAudioUnlockBanner();
-        if (localState.status === 'answering' && isBgmEnabled && !bgmTimer) {
-          startKahootBGM();
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume().catch(() => {});
         }
+        return audioCtx;
+      } catch(e) {
+        return null;
       }
     }
 
-    window.addEventListener('click', unlockAudio);
-    window.addEventListener('touchstart', unlockAudio);
-    window.addEventListener('keydown', unlockAudio);
-
-    // 敲擊清脆木琴音 (雙振盪器：溫暖三角形木質共鳴 + 短促木槌敲擊)
     function playMarimbaNote(freq, time, duration, gainLevel) {
       try {
         const ctx = getAudioCtx();
         if (!ctx || ctx.state !== 'running') return;
-
         const startTime = Math.max(ctx.currentTime, time || ctx.currentTime);
         const gVal = gainLevel || 0.35;
 
-        // 主基音 (Triangle)
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'triangle';
@@ -970,24 +935,7 @@
         gain.connect(ctx.destination);
         osc.start(startTime);
         osc.stop(startTime + duration + 0.05);
-
-        // 木槌敲擊高頻木質非諧泛音 (2.76 倍頻率，0.04 秒急速衰減)
-        const clickOsc = ctx.createOscillator();
-        const clickGain = ctx.createGain();
-        clickOsc.type = 'sine';
-        clickOsc.frequency.setValueAtTime(freq * 2.76, startTime);
-
-        clickGain.gain.setValueAtTime(0.0001, startTime);
-        clickGain.gain.linearRampToValueAtTime(gVal * 0.45, startTime + 0.005);
-        clickGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.045);
-
-        clickOsc.connect(clickGain);
-        clickGain.connect(ctx.destination);
-        clickOsc.start(startTime);
-        clickOsc.stop(startTime + 0.06);
-      } catch(e) {
-        console.warn("playMarimbaNote error:", e);
-      }
+      } catch(e) {}
     }
 
     function playKahootBeat() {
@@ -996,37 +944,20 @@
         if (!ctx || ctx.state !== 'running') return;
         const now = ctx.currentTime;
         const noteIdx = kahootPattern[bgmStep % kahootPattern.length];
-        const freq = scaleFreqs[noteIdx];
-        
-        // 輕快跳躍旋律
-        playMarimbaNote(freq, now, 0.22, 0.32);
-        
-        // 低音木琴重拍律動 (每 4 拍一聲沉穩木音)
+        playMarimbaNote(scaleFreqs[noteIdx], now, 0.22, 0.3);
         if (bgmStep % 4 === 0) {
-          playMarimbaNote(130.81, now, 0.25, 0.28);
-        } else if (bgmStep % 4 === 2) {
-          playMarimbaNote(196.00, now, 0.18, 0.22);
+          playMarimbaNote(130.81, now, 0.25, 0.25);
         }
         bgmStep++;
       } catch(e) {}
     }
 
-    // 啟動作答時的 Kahoot 輕快律動音樂
     function startKahootBGM() {
       if (!isBgmEnabled) return;
       const ctx = getAudioCtx();
-      if (!ctx) return;
-
-      // 若處於 suspended，先提示解鎖，千萬不要開啟空轉 timer
-      if (ctx.state === 'suspended') {
-        showAudioUnlockBanner();
-        return;
-      }
-      hideAudioUnlockBanner();
-
+      if (!ctx || ctx.state !== 'running') return;
       if (bgmTimer) return;
       bgmStep = 0;
-      // 立即發出第一響
       playKahootBeat();
       bgmTimer = setInterval(() => {
         if (!isBgmEnabled || localState.status !== 'answering') {
@@ -1034,10 +965,9 @@
           return;
         }
         playKahootBeat();
-      }, 220); // 輕快跳躍約 135 BPM
+      }, 220);
     }
 
-    // 停止作答音樂
     function stopKahootBGM() {
       if (bgmTimer) {
         clearInterval(bgmTimer);
@@ -1045,31 +975,28 @@
       }
     }
 
-    // 截止作答時的開箱音效 (叮～開票！)
     function playStopFanfare() {
       if (!isBgmEnabled) return;
-      const ctx = getAudioCtx();
-      if (!ctx || ctx.state !== 'running') return;
       try {
+        const ctx = getAudioCtx();
+        if (!ctx || ctx.state !== 'running') return;
         const now = ctx.currentTime;
-        playMarimbaNote(523.25, now, 0.3, 0.45);        // C5
-        playMarimbaNote(659.25, now + 0.09, 0.3, 0.45); // E5
-        playMarimbaNote(783.99, now + 0.18, 0.55, 0.5); // G5
-        playMarimbaNote(1046.50, now + 0.28, 0.7, 0.55);// C6
+        playMarimbaNote(523.25, now, 0.25, 0.4);
+        playMarimbaNote(659.25, now + 0.09, 0.25, 0.4);
+        playMarimbaNote(783.99, now + 0.18, 0.5, 0.45);
       } catch(e) {}
     }
 
-    // 揭曉大師時的深山木魚磬鐘
     function playZenBell() {
-      const ctx = getAudioCtx();
-      if (!ctx || ctx.state !== 'running') return;
       try {
+        const ctx = getAudioCtx();
+        if (!ctx || ctx.state !== 'running') return;
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(587.33, ctx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.8);
-        gain.gain.setValueAtTime(0.7, ctx.currentTime);
+        gain.gain.setValueAtTime(0.6, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.2);
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -1078,42 +1005,53 @@
       } catch(e) {}
     }
 
-    // 音樂開關
+    // 點擊右上角按鈕手動切換作答音樂
     function toggleBgm() {
+      const ctx = getAudioCtx();
+      if (ctx && ctx.state === 'suspended') {
+        ctx.resume();
+      }
       isBgmEnabled = !isBgmEnabled;
       const btn = document.getElementById("bgmToggleBtn");
-      unlockAudio();
-      if (isBgmEnabled) {
-        btn.innerHTML = '<i class="fa-solid fa-music"></i> <span id="bgmLabel">作答音樂</span>';
-        btn.style.color = "var(--text-main)";
-        if (localState.status === 'answering') startKahootBGM();
-      } else {
-        stopKahootBGM();
-        hideAudioUnlockBanner();
-        btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> <span id="bgmLabel">靜音</span>';
-        btn.style.color = "var(--text-muted)";
+      if (btn) {
+        if (isBgmEnabled) {
+          btn.innerHTML = '<i class="fa-solid fa-music"></i> <span id="bgmLabel">作答音樂：開</span>';
+          btn.style.background = "#E07A5F";
+          btn.style.color = "#fff";
+          if (localState.status === 'answering') startKahootBGM();
+        } else {
+          stopKahootBGM();
+          btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> <span id="bgmLabel">作答音樂：關</span>';
+          btn.style.background = "#fff";
+          btn.style.color = "var(--text-muted)";
+        }
       }
     }
 
+    function safeSetDisplay(id, val) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = val;
+    }
+
     function initUI() {
-      const ctx = getAudioCtx();
-      if (ctx && ctx.state === 'suspended' && isBgmEnabled) {
-        showAudioUnlockBanner();
+      try {
+        if (currentRole === "host") {
+          safeSetDisplay("hostStage", "flex");
+          safeSetDisplay("playerStage", "none");
+          safeSetDisplay("fsBtn", "inline-flex");
+          safeSetDisplay("resetGameBtn", "inline-flex");
+          generateHostQR();
+        } else {
+          safeSetDisplay("hostStage", "none");
+          safeSetDisplay("playerStage", "flex");
+          safeSetDisplay("fsBtn", "none");
+          safeSetDisplay("resetGameBtn", "none");
+        }
+        renderStage();
+        startPolling();
+      } catch(err) {
+        console.error("Critical error in initUI:", err);
       }
-      if (currentRole === "host") {
-        document.getElementById("hostStage").style.display = "flex";
-        document.getElementById("playerStage").style.display = "none";
-        document.getElementById("fsBtn").style.display = "inline-flex";
-        document.getElementById("resetGameBtn").style.display = "inline-flex";
-        generateHostQR();
-      } else {
-        document.getElementById("hostStage").style.display = "none";
-        document.getElementById("playerStage").style.display = "flex";
-        document.getElementById("fsBtn").style.display = "none";
-        document.getElementById("resetGameBtn").style.display = "none";
-      }
-      renderStage();
-      startPolling();
     }
 
     let clickCount = 0;
