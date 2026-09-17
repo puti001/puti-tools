@@ -611,6 +611,12 @@
     }
 
     footer a { color: var(--accent-brown); text-decoration: underline; font-weight: 700; }
+
+    @keyframes pulseBanner {
+      0% { transform: scale(1); opacity: 0.95; }
+      50% { transform: scale(1.008); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.95; }
+    }
   </style>
 </head>
 <body>
@@ -625,9 +631,12 @@
       <button class="btn" id="bgmToggleBtn" onclick="toggleBgm()"><i class="fa-solid fa-music"></i> <span id="bgmLabel">作答音樂</span></button>
       <!-- 講者端專用按鈕 -->
       <button class="btn" id="resetGameBtn" style="display:none;" onclick="hostResetAll()"><i class="fa-solid fa-rotate-left"></i> 重置全場</button>
-      <button class="btn" id="fsBtn" style="display:none;" onclick="toggleFullscreen()"><i class="fa-solid fa-expand"></i> 全螢幕</button>
-    </div>
   </header>
+
+  <!-- 瀏覽器 Autoplay 解鎖提示條 (未手勢互動前醒目提示) -->
+  <div id="audioUnlockBanner" onclick="unlockAudio()" style="display:none; background: linear-gradient(135deg, #E07A5F 0%, #D46A4F 100%); color:#fff; text-align:center; padding:11px 18px; font-weight:800; font-size:1.05rem; cursor:pointer; box-shadow:0 4px 14px rgba(224,122,95,0.3); z-index:999; animation: pulseBanner 2s infinite;">
+    <i class="fa-solid fa-volume-high"></i> 🎵 現場作答音效已就緒，點擊此處或畫面任意處立即啟用！
+  </div>
 
   <main>
     <!-- 大螢幕講者主控端 (Host) -->
@@ -897,55 +906,135 @@
 
     function getAudioCtx() {
       if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
+        const AudioClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioClass) {
+          audioCtx = new AudioClass();
+        }
       }
       return audioCtx;
     }
 
+    function showAudioUnlockBanner() {
+      const b = document.getElementById("audioUnlockBanner");
+      if (b && isBgmEnabled) b.style.display = "block";
+    }
+
+    function hideAudioUnlockBanner() {
+      const b = document.getElementById("audioUnlockBanner");
+      if (b) b.style.display = "none";
+    }
+
+    // 全域手勢解鎖音訊 (解決 Chrome/Edge/Safari Autoplay 限制)
+    function unlockAudio() {
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      if (ctx.state === 'suspended') {
+        ctx.resume().then(() => {
+          hideAudioUnlockBanner();
+          if (localState.status === 'answering' && isBgmEnabled && !bgmTimer) {
+            startKahootBGM();
+          }
+        }).catch(() => {});
+      } else if (ctx.state === 'running') {
+        hideAudioUnlockBanner();
+        if (localState.status === 'answering' && isBgmEnabled && !bgmTimer) {
+          startKahootBGM();
+        }
+      }
+    }
+
+    window.addEventListener('click', unlockAudio);
+    window.addEventListener('touchstart', unlockAudio);
+    window.addEventListener('keydown', unlockAudio);
+
+    // 敲擊清脆木琴音 (雙振盪器：溫暖三角形木質共鳴 + 短促木槌敲擊)
     function playMarimbaNote(freq, time, duration, gainLevel) {
       try {
         const ctx = getAudioCtx();
+        if (!ctx || ctx.state !== 'running') return;
+
+        const startTime = Math.max(ctx.currentTime, time || ctx.currentTime);
+        const gVal = gainLevel || 0.35;
+
+        // 主基音 (Triangle)
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.type = 'triangle'; // 三角波木質共鳴感
-        osc.frequency.setValueAtTime(freq, time);
-        gain.gain.setValueAtTime(gainLevel || 0.15, time);
-        gain.gain.exponentialRampToValueAtTime(0.001, time + duration);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, startTime);
+        
+        gain.gain.setValueAtTime(0.0001, startTime);
+        gain.gain.linearRampToValueAtTime(gVal, startTime + 0.012);
+        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
         osc.connect(gain);
         gain.connect(ctx.destination);
-        osc.start(time);
-        osc.stop(time + duration);
+        osc.start(startTime);
+        osc.stop(startTime + duration + 0.05);
+
+        // 木槌敲擊高頻木質非諧泛音 (2.76 倍頻率，0.04 秒急速衰減)
+        const clickOsc = ctx.createOscillator();
+        const clickGain = ctx.createGain();
+        clickOsc.type = 'sine';
+        clickOsc.frequency.setValueAtTime(freq * 2.76, startTime);
+
+        clickGain.gain.setValueAtTime(0.0001, startTime);
+        clickGain.gain.linearRampToValueAtTime(gVal * 0.45, startTime + 0.005);
+        clickGain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.045);
+
+        clickOsc.connect(clickGain);
+        clickGain.connect(ctx.destination);
+        clickOsc.start(startTime);
+        clickOsc.stop(startTime + 0.06);
+      } catch(e) {
+        console.warn("playMarimbaNote error:", e);
+      }
+    }
+
+    function playKahootBeat() {
+      try {
+        const ctx = getAudioCtx();
+        if (!ctx || ctx.state !== 'running') return;
+        const now = ctx.currentTime;
+        const noteIdx = kahootPattern[bgmStep % kahootPattern.length];
+        const freq = scaleFreqs[noteIdx];
+        
+        // 輕快跳躍旋律
+        playMarimbaNote(freq, now, 0.22, 0.32);
+        
+        // 低音木琴重拍律動 (每 4 拍一聲沉穩木音)
+        if (bgmStep % 4 === 0) {
+          playMarimbaNote(130.81, now, 0.25, 0.28);
+        } else if (bgmStep % 4 === 2) {
+          playMarimbaNote(196.00, now, 0.18, 0.22);
+        }
+        bgmStep++;
       } catch(e) {}
     }
 
     // 啟動作答時的 Kahoot 輕快律動音樂
     function startKahootBGM() {
-      if (!isBgmEnabled || bgmTimer) return;
+      if (!isBgmEnabled) return;
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+
+      // 若處於 suspended，先提示解鎖，千萬不要開啟空轉 timer
+      if (ctx.state === 'suspended') {
+        showAudioUnlockBanner();
+        return;
+      }
+      hideAudioUnlockBanner();
+
+      if (bgmTimer) return;
       bgmStep = 0;
+      // 立即發出第一響
+      playKahootBeat();
       bgmTimer = setInterval(() => {
         if (!isBgmEnabled || localState.status !== 'answering') {
           stopKahootBGM();
           return;
         }
-        try {
-          const ctx = getAudioCtx();
-          const now = ctx.currentTime;
-          const noteIdx = kahootPattern[bgmStep % kahootPattern.length];
-          const freq = scaleFreqs[noteIdx];
-          
-          // 輕快主旋律
-          playMarimbaNote(freq, now, 0.22, 0.14);
-          
-          // 輕打擊律動
-          if (bgmStep % 4 === 0) {
-            playMarimbaNote(130.81, now, 0.15, 0.12);
-          }
-          bgmStep++;
-        } catch(e) {}
-      }, 230); // 輕快跳躍約 130 BPM
+        playKahootBeat();
+      }, 220); // 輕快跳躍約 135 BPM
     }
 
     // 停止作答音樂
@@ -959,30 +1048,33 @@
     // 截止作答時的開箱音效 (叮～開票！)
     function playStopFanfare() {
       if (!isBgmEnabled) return;
+      const ctx = getAudioCtx();
+      if (!ctx || ctx.state !== 'running') return;
       try {
-        const ctx = getAudioCtx();
         const now = ctx.currentTime;
-        playMarimbaNote(523.25, now, 0.25, 0.22);        // C5
-        playMarimbaNote(659.25, now + 0.08, 0.25, 0.22); // E5
-        playMarimbaNote(783.99, now + 0.16, 0.5, 0.26);  // G5
+        playMarimbaNote(523.25, now, 0.3, 0.45);        // C5
+        playMarimbaNote(659.25, now + 0.09, 0.3, 0.45); // E5
+        playMarimbaNote(783.99, now + 0.18, 0.55, 0.5); // G5
+        playMarimbaNote(1046.50, now + 0.28, 0.7, 0.55);// C6
       } catch(e) {}
     }
 
     // 揭曉大師時的深山木魚磬鐘
     function playZenBell() {
+      const ctx = getAudioCtx();
+      if (!ctx || ctx.state !== 'running') return;
       try {
-        const ctx = getAudioCtx();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(587.33, ctx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.8);
         gain.gain.setValueAtTime(0.7, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.0);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.2);
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start();
-        osc.stop(ctx.currentTime + 1.0);
+        osc.stop(ctx.currentTime + 1.2);
       } catch(e) {}
     }
 
@@ -990,18 +1082,24 @@
     function toggleBgm() {
       isBgmEnabled = !isBgmEnabled;
       const btn = document.getElementById("bgmToggleBtn");
+      unlockAudio();
       if (isBgmEnabled) {
         btn.innerHTML = '<i class="fa-solid fa-music"></i> <span id="bgmLabel">作答音樂</span>';
         btn.style.color = "var(--text-main)";
         if (localState.status === 'answering') startKahootBGM();
       } else {
         stopKahootBGM();
+        hideAudioUnlockBanner();
         btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> <span id="bgmLabel">靜音</span>';
         btn.style.color = "var(--text-muted)";
       }
     }
 
     function initUI() {
+      const ctx = getAudioCtx();
+      if (ctx && ctx.state === 'suspended' && isBgmEnabled) {
+        showAudioUnlockBanner();
+      }
       if (currentRole === "host") {
         document.getElementById("hostStage").style.display = "flex";
         document.getElementById("playerStage").style.display = "none";
@@ -1080,6 +1178,13 @@
     }
 
     function fetchState() {
+      if (typeof google === 'undefined' || !google.script || !google.script.run) {
+        renderStage();
+        if (localState.status === 'answering' && isBgmEnabled && !bgmTimer) {
+          startKahootBGM();
+        }
+        return;
+      }
       google.script.run
         .withSuccessHandler(function(res) {
           if (res && res.success) {
@@ -1232,8 +1337,15 @@
     }
 
     function playerVote(choice) {
+      unlockAudio();
       if (localState.status !== 'answering') return;
       localState.myChoice = choice;
+      if (typeof google === 'undefined' || !google.script || !google.script.run) {
+        localState.votes[choice] = (localState.votes[choice] || 0) + 1;
+        localState.voterCount = (localState.voterCount || 0) + 1;
+        renderStage();
+        return;
+      }
       renderStage();
 
       google.script.run
@@ -1278,6 +1390,36 @@
     }
 
     function callHostAction(action, data) {
+      unlockAudio();
+      if (typeof google === 'undefined' || !google.script || !google.script.run) {
+        if (action === 'startQuestion') {
+          localState.currentQ = data.qIndex;
+          localState.status = 'answering';
+          localState.votes = { A: 0, B: 0, C: 0, D: 0 };
+          localState.voterCount = 0;
+          localState.myChoice = null;
+          startKahootBGM();
+        } else if (action === 'endVoting') {
+          localState.status = 'ended';
+          stopKahootBGM();
+          playStopFanfare();
+        } else if (action === 'reopenVote') {
+          localState.status = 'answering';
+          startKahootBGM();
+        } else if (action === 'revealMaster') {
+          localState.status = (localState.status === 'revealed') ? 'ended' : 'revealed';
+          if (localState.status === 'revealed') playZenBell();
+        } else if (action === 'resetAll') {
+          localState.currentQ = 0;
+          localState.status = 'answering';
+          localState.votes = { A: 0, B: 0, C: 0, D: 0 };
+          localState.voterCount = 0;
+          localState.myChoice = null;
+          startKahootBGM();
+        }
+        renderStage();
+        return;
+      }
       google.script.run
         .withSuccessHandler(function(res) {
           if (res && res.success) {
