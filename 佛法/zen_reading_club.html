@@ -710,11 +710,18 @@
     }
 
     function revealMasterAnswer() {
-      playZenChime();
       const card = document.getElementById("masterCard");
+      const btn = document.querySelector(".reveal-btn");
       if (card) {
-        card.style.display = "block";
-        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (card.style.display === "block") {
+          card.style.display = "none";
+          if (btn) btn.innerHTML = '<i class="fa-solid fa-bell"></i> 揭曉禪宗大師神操作';
+        } else {
+          playZenChime();
+          card.style.display = "block";
+          if (btn) btn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> 收起大師神操作';
+          card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
     }
 
