@@ -436,6 +436,93 @@
       gap: 12px;
     }
 
+    /* 題目分頁數字導航列 (1 2 3 4 5 6) */
+    .host-q-nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #FAF7F2;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      border: 1.5px solid var(--border-warm);
+    }
+
+    .q-nav-label {
+      font-size: 0.95rem;
+      font-weight: 900;
+      color: var(--accent-brown);
+      margin-right: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .q-nav-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px solid var(--border-warm);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 900;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      background: #FFFFFF;
+      color: var(--text-muted);
+      outline: none;
+    }
+
+    .q-nav-btn:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent-brown);
+      color: var(--accent-brown);
+    }
+
+    /* 狀態：已答過 / 已開票 (綠色莫蘭迪) */
+    .q-nav-btn.answered {
+      background: var(--color-b);
+      border-color: #6A9E86;
+      color: #FFFFFF;
+      box-shadow: 0 4px 10px rgba(129, 178, 154, 0.35);
+    }
+
+    .q-nav-btn.answered::after {
+      content: "✓";
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 17px;
+      height: 17px;
+      background: #286353;
+      color: #FFFFFF;
+      font-size: 10px;
+      font-weight: 900;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid #FFFFFF;
+    }
+
+    /* 狀態：當前正在進行 (醒目高亮光環) */
+    .q-nav-btn.current {
+      background: var(--accent-brown);
+      border-color: var(--accent-brown);
+      color: #FFFFFF;
+      transform: scale(1.12);
+      box-shadow: 0 0 0 4px #F2CC8F, 0 6px 16px rgba(124, 77, 37, 0.35);
+      z-index: 2;
+    }
+
+    .q-nav-btn.current.answered {
+      background: #286353;
+      border-color: #286353;
+      box-shadow: 0 0 0 4px #BAD9CE, 0 6px 16px rgba(40, 99, 83, 0.4);
+    }
+
     .master-reveal-card {
       background: #fff;
       border-radius: var(--radius-lg);
@@ -661,9 +748,10 @@
 
       <!-- 講者手動主控列 -->
       <div class="host-control-panel">
-        <div class="host-btn-group">
-          <button class="btn" onclick="hostPrevQ()"><i class="fa-solid fa-arrow-left"></i> 上一題</button>
-          <button class="btn btn-primary" onclick="hostNextQ()">下一題 <i class="fa-solid fa-arrow-right"></i></button>
+        <div class="host-btn-group" style="gap: 8px;">
+          <button class="btn" onclick="hostPrevQ()" title="上一題" style="padding: 10px 15px; font-size: 1.1rem;"><i class="fa-solid fa-chevron-left"></i></button>
+          <div class="host-q-nav" id="hostQNav"></div>
+          <button class="btn btn-primary" onclick="hostNextQ()" title="下一題" style="padding: 10px 15px; font-size: 1.1rem;"><i class="fa-solid fa-chevron-right"></i></button>
         </div>
 
         <div class="host-btn-group">
@@ -1012,7 +1100,8 @@
         document.getElementById("hostQTag").innerText = "情境 " + (localState.currentQ + 1);
         document.getElementById("hostQTitle").innerText = q.title;
         document.getElementById("hostQDesc").innerText = q.desc;
-        document.getElementById("hostVoterCountText").innerHTML = '<i class="fa-solid fa-users"></i> 已投票：' + localState.voterCount + ' 人';
+        document.getElementById("hostVoterCountText").innerHTML = '<i class="fa-solid fa-users"></i> 已投票：' + (localState.voterCount || 0) + ' 人';
+        renderHostQNav();
 
         const statusPill = document.getElementById("hostStatusPill");
         const statusText = document.getElementById("hostStatusText");
@@ -1166,6 +1255,36 @@
       }
     }
 
+    function hostJumpToQ(idx) {
+      if (idx < 0 || idx >= questionsData.length) return;
+      if (idx === localState.currentQ) return;
+      callHostAction('startQuestion', { qIndex: idx });
+    }
+
+    function renderHostQNav() {
+      const nav = document.getElementById("hostQNav");
+      if (!nav) return;
+      const answeredList = localState.answeredQuestions || [];
+
+      nav.innerHTML = questionsData.map((q, idx) => {
+        const isCurrent = (localState.currentQ === idx);
+        const isAnswered = answeredList.indexOf(idx) !== -1;
+
+        let cls = "q-nav-btn";
+        if (isAnswered) cls += " answered";
+        if (isCurrent) cls += " current";
+
+        let tooltip = `第 ${idx + 1} 題：` + (isAnswered ? "已開票揭曉" : "尚未作答");
+        if (isCurrent) tooltip += "（當前進行中）";
+
+        return `
+          <button class="${cls}" onclick="hostJumpToQ(${idx})" title="${tooltip}">
+            ${idx + 1}
+          </button>
+        `;
+      }).join("");
+    }
+
     function hostResetAll() {
       if (confirm("確定要將全場重置回第 1 題開放作答嗎？")) {
         callHostAction('resetAll');
@@ -1178,6 +1297,7 @@
 
     function callHostAction(action, data) {
       if (typeof google === 'undefined' || !google.script || !google.script.run) {
+        if (!localState.answeredQuestions) localState.answeredQuestions = [];
         if (action === 'startQuestion') {
           localState.currentQ = data.qIndex;
           localState.status = 'answering';
@@ -1186,19 +1306,27 @@
           localState.myChoice = null;
         } else if (action === 'endVoting') {
           localState.status = 'ended';
+          if (localState.answeredQuestions.indexOf(localState.currentQ) === -1) {
+            localState.answeredQuestions.push(localState.currentQ);
+          }
         } else if (action === 'reopenVote') {
           localState.status = 'answering';
           localState.votes = { A: 0, B: 0, C: 0, D: 0 };
           localState.voterCount = 0;
           localState.myChoice = null;
+          localState.answeredQuestions = localState.answeredQuestions.filter(q => q !== localState.currentQ);
         } else if (action === 'revealMaster') {
           localState.status = (localState.status === 'revealed') ? 'ended' : 'revealed';
+          if (localState.answeredQuestions.indexOf(localState.currentQ) === -1) {
+            localState.answeredQuestions.push(localState.currentQ);
+          }
         } else if (action === 'resetAll') {
           localState.currentQ = 0;
           localState.status = 'answering';
           localState.votes = { A: 0, B: 0, C: 0, D: 0 };
           localState.voterCount = 0;
           localState.myChoice = null;
+          localState.answeredQuestions = [];
         }
         renderStage();
         return;

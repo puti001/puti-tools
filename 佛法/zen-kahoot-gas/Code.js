@@ -40,6 +40,7 @@ function getGameState(voterId) {
   // 確保 votes 物件完整
   if (!state.votes) state.votes = { "A": 0, "B": 0, "C": 0, "D": 0 };
   if (!state.status) state.status = 'answering';
+  if (!state.answeredQuestions) state.answeredQuestions = [];
 
   var myChoice = (voterId && state.voters && state.voters[voterId]) ? state.voters[voterId] : null;
   
@@ -49,7 +50,8 @@ function getGameState(voterId) {
     status: state.status, // "answering" | "ended" | "revealed"
     votes: state.votes,
     voterCount: Object.keys(state.voters || {}).length,
-    myChoice: myChoice
+    myChoice: myChoice,
+    answeredQuestions: state.answeredQuestions || []
   };
 }
 
@@ -99,6 +101,7 @@ function hostAction(action, data) {
     lock.waitLock(5000);
     var stateRaw = props.getProperty('GAME_STATE');
     var state = stateRaw ? JSON.parse(stateRaw) : resetGameInternal();
+    if (!state.answeredQuestions) state.answeredQuestions = [];
 
     if (action === 'startQuestion') {
       var qIndex = (data && data.qIndex !== undefined) ? data.qIndex : 0;
@@ -107,16 +110,23 @@ function hostAction(action, data) {
       state.votes = { "A": 0, "B": 0, "C": 0, "D": 0 };
       state.voters = {};
     } else if (action === 'reopenVote') {
-      // 重新開放本題作答：重置本題票數與記錄
+      // 重新開放本題作答：重置本題票數與記錄，並從已答過列表中移除
       state.status = 'answering';
       state.votes = { "A": 0, "B": 0, "C": 0, "D": 0 };
       state.voters = {};
+      state.answeredQuestions = state.answeredQuestions.filter(function(q) { return q !== state.currentQ; });
     } else if (action === 'endVoting') {
-      // 截止作答並開票
+      // 截止作答並開票：記錄為已答過
       state.status = 'ended';
+      if (state.answeredQuestions.indexOf(state.currentQ) === -1) {
+        state.answeredQuestions.push(state.currentQ);
+      }
     } else if (action === 'revealMaster') {
       // 切換揭曉狀態：若已揭曉則收起回 ended，若未揭曉則展開為 revealed
       state.status = (state.status === 'revealed') ? 'ended' : 'revealed';
+      if (state.answeredQuestions.indexOf(state.currentQ) === -1) {
+        state.answeredQuestions.push(state.currentQ);
+      }
     } else if (action === 'resetAll') {
       state = resetGameInternal();
     }
@@ -136,7 +146,8 @@ function resetGameInternal() {
     currentQ: 0,
     status: 'answering',
     votes: { "A": 0, "B": 0, "C": 0, "D": 0 },
-    voters: {}
+    voters: {},
+    answeredQuestions: []
   };
   PropertiesService.getScriptProperties().setProperty('GAME_STATE', JSON.stringify(state));
   return state;
