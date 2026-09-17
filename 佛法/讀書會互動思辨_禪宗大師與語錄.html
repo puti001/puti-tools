@@ -3,258 +3,419 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Puti-AI | 禪者心燈：現代人生的六大靈魂拷問（讀書會互動思辨系統）</title>
+  <title>Puti-AI | 讀書會現場互動思辨：人生關鍵抉擇</title>
   <style>
     :root {
-      --bg-warm: #fcfaf7;
+      --bg-warm: #f7f4ef;
       --card-bg: #ffffff;
-      --card-border: #e9e3da;
-      --text-main: #2d2926;
-      --text-muted: #736b63;
-      --accent-brown: #8c6239;
-      --accent-gold: #c49a45;
-      --accent-zen: #4a675f;
-      --accent-soft: #f4ede2;
+      --card-border: #dfd7cb;
+      --text-main: #1f1c19;
+      --text-muted: #6e665d;
+      --accent-brown: #7c4d25;
+      --accent-gold: #b38226;
+      --accent-soft: #f0e6d8;
       --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
       --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
       --shadow-lg: 0 16px 36px rgba(0,0,0,0.12);
-      --radius: 16px;
+      --radius: 18px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif; -webkit-font-smoothing: antialiased; }
-    body { background-color: var(--bg-warm); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; line-height: 1.6; }
-    header { background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(10px); border-bottom: 1px solid var(--card-border); padding: 12px 24px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; }
-    .brand-box { display: flex; align-items: center; gap: 12px; }
-    .brand-badge { background: var(--accent-brown); color: #fff; font-size: 0.8rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
-    .brand-title { font-size: 1.25rem; font-weight: 800; color: var(--text-main); }
+    body { background-color: var(--bg-warm); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+    
+    /* 頂部列 */
+    header { background: #ffffff; border-bottom: 2px solid var(--card-border); padding: 14px 28px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; }
+    .brand-title { font-size: 1.35rem; font-weight: 900; color: var(--accent-brown); letter-spacing: 0.5px; }
     .header-actions { display: flex; align-items: center; gap: 12px; }
-    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 24px; font-size: 0.9rem; font-weight: 600; cursor: pointer; border: 1px solid var(--card-border); background: #fff; color: var(--text-main); transition: all 0.2s; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 24px; font-size: 1rem; font-weight: 700; cursor: pointer; border: 1.5px solid var(--card-border); background: #fff; color: var(--text-main); transition: all 0.2s; }
     .btn:hover { background: var(--accent-soft); border-color: var(--accent-gold); }
     .btn-primary { background: var(--accent-brown); color: #fff; border-color: var(--accent-brown); }
-    .btn-primary:hover { background: #754f2c; color: #fff; }
-    .progress-strip { display: flex; background: #fff; border-bottom: 1px solid var(--card-border); overflow-x: auto; padding: 8px 16px; gap: 8px; }
-    .q-tab { flex: 1; min-width: 140px; padding: 10px 12px; border-radius: 12px; background: var(--bg-warm); border: 1px solid var(--card-border); text-align: left; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; gap: 2px; }
-    .q-tab.active { background: var(--accent-soft); border-color: var(--accent-brown); box-shadow: var(--shadow-sm); }
-    .q-tab .q-num { font-size: 0.75rem; font-weight: 700; color: var(--accent-brown); }
-    .q-tab .q-name { font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    main { flex: 1; max-width: 1050px; margin: 0 auto; padding: 24px 20px 60px; width: 100%; }
-    .question-container { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--card-border); box-shadow: var(--shadow-md); overflow: hidden; display: flex; flex-direction: column; }
-    .scenario-header { background: linear-gradient(135deg, #fdfbf7 0%, #f7f1e7 100%); padding: 28px 32px; border-bottom: 1px solid var(--card-border); }
-    .tag-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-    .scenario-tag { font-size: 0.8rem; font-weight: 700; padding: 3px 12px; border-radius: 12px; background: rgba(140, 98, 57, 0.12); color: var(--accent-brown); }
-    .focus-tag { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
-    .scenario-title { font-size: 1.6rem; font-weight: 800; color: #1a1816; margin-bottom: 12px; line-height: 1.35; }
-    .scenario-desc { font-size: 1.1rem; color: #423d38; background: #ffffff; padding: 16px 20px; border-radius: 12px; border-left: 4px solid var(--accent-gold); box-shadow: inset 0 0 0 1px var(--card-border); }
-    .options-section { padding: 28px 32px; }
-    .section-intro-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
-    .section-tip { font-size: 0.95rem; font-weight: 700; color: var(--text-muted); }
-    .reset-votes-btn { font-size: 0.8rem; color: var(--text-muted); cursor: pointer; text-decoration: underline; background: none; border: none; }
-    .options-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-    .option-card { background: #ffffff; border: 2px solid var(--card-border); border-radius: 14px; padding: 18px 20px; transition: all 0.25s ease; display: flex; flex-direction: column; gap: 12px; }
-    .option-card:hover { border-color: #d1c5b4; background: #faf7f2; }
-    .opt-header-row { display: flex; align-items: flex-start; gap: 14px; }
-    .opt-letter { width: 38px; height: 38px; border-radius: 50%; background: var(--accent-soft); color: var(--accent-brown); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 800; flex-shrink: 0; }
-    .opt-content { flex: 1; }
-    .opt-archetype { display: inline-block; font-size: 0.8rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; margin-bottom: 4px; background: #eef2f5; color: #476579; }
-    .opt-text { font-size: 1.05rem; font-weight: 600; color: var(--text-main); line-height: 1.45; }
-    .opt-rationale { font-size: 0.88rem; color: #635c54; margin-top: 6px; line-height: 1.4; padding-top: 6px; border-top: 1px dashed var(--card-border); }
-    .vote-counter-box { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.02); padding: 8px 14px; border-radius: 10px; margin-top: 4px; }
-    .vote-btns { display: flex; align-items: center; gap: 8px; }
-    .v-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--card-border); background: #fff; cursor: pointer; font-size: 1.1rem; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
-    .v-btn:hover { background: var(--accent-soft); border-color: var(--accent-gold); }
-    .vote-badge { font-size: 0.95rem; font-weight: 800; color: var(--accent-brown); min-width: 60px; text-align: center; }
-    .vote-progress-track { flex: 1; height: 10px; background: #ede6dc; border-radius: 5px; margin: 0 14px; overflow: hidden; }
-    .vote-progress-fill { height: 100%; width: 0%; background: var(--accent-brown); border-radius: 5px; transition: width 0.3s ease; }
-    .action-control-panel { padding: 18px 32px 28px; display: flex; flex-direction: column; align-items: center; border-top: 1px solid var(--card-border); background: #faf8f5; }
-    .reveal-btn { padding: 14px 38px; border-radius: 30px; background: linear-gradient(135deg, #a47141 0%, #805027 100%); color: #ffffff; font-size: 1.15rem; font-weight: 800; border: none; cursor: pointer; box-shadow: 0 6px 18px rgba(130, 80, 39, 0.25); transition: all 0.25s ease; }
-    .reveal-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(130, 80, 39, 0.35); background: linear-gradient(135deg, #b57e4a 0%, #8c572b 100%); }
-    .master-reveal-card { margin: 20px 32px 32px; background: #fff; border-radius: 16px; border: 2px solid #d4af37; box-shadow: var(--shadow-lg); display: none; animation: flipIn 0.4s ease forwards; overflow: hidden; }
-    @keyframes flipIn { from { opacity: 0; transform: scale(0.97) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-    .reveal-banner { background: linear-gradient(135deg, #2b2723 0%, #443c35 100%); color: #fff; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; }
-    .master-info { display: flex; align-items: center; gap: 14px; }
-    .master-avatar-pill { background: #c49a45; color: #1a1510; font-weight: 900; font-size: 1.1rem; padding: 6px 14px; border-radius: 20px; }
-    .master-name-box h3 { font-size: 1.35rem; color: #fcefd6; }
-    .master-name-box span { font-size: 0.85rem; color: #c9bfb5; }
-    .master-body { padding: 24px; display: grid; grid-template-columns: 1fr; gap: 18px; }
-    .body-box { background: #fdfaf6; border-radius: 12px; padding: 16px 20px; border: 1px solid var(--card-border); }
-    .box-title { font-size: 0.95rem; font-weight: 800; color: var(--accent-brown); margin-bottom: 8px; }
-    .quote-text { font-size: 1.05rem; color: #38322c; font-style: italic; line-height: 1.6; }
-    .explanation-text { font-size: 1rem; color: #2d2823; line-height: 1.65; }
-    .antidote-box { background: #f1f7f5; border: 1px solid #b8d6ce; border-radius: 12px; padding: 16px 20px; }
-    .antidote-box .box-title { color: #2c6858; }
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
-    .modal-sheet { background: #fff; max-width: 700px; width: 100%; max-height: 85vh; border-radius: 16px; box-shadow: var(--shadow-lg); overflow-y: auto; padding: 28px; position: relative; }
-    .modal-close { position: absolute; top: 20px; right: 20px; background: #eee; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-weight: bold; }
-    footer { background: #ffffff; border-top: 1px solid var(--card-border); padding: 24px; text-align: center; font-size: 0.88rem; color: var(--text-muted); margin-top: auto; }
-    footer a { color: var(--accent-brown); text-decoration: underline; font-weight: 600; }
-    body.projector-mode { font-size: 118%; }
-    body.projector-mode .scenario-title { font-size: 2.1rem; }
-    body.projector-mode .scenario-desc { font-size: 1.3rem; }
-    body.projector-mode .opt-text { font-size: 1.2rem; }
+    .btn-primary:hover { background: #633c1a; }
+
+    /* 題目導覽切換列 */
+    .progress-strip { display: flex; background: #ffffff; border-bottom: 1px solid var(--card-border); overflow-x: auto; padding: 10px 24px; gap: 12px; }
+    .q-tab { flex: 1; min-width: 140px; padding: 12px 14px; border-radius: 12px; background: var(--bg-warm); border: 1.5px solid var(--card-border); text-align: center; cursor: pointer; transition: all 0.2s; font-size: 1.05rem; font-weight: 800; color: var(--text-muted); }
+    .q-tab.active { background: var(--accent-soft); border-color: var(--accent-brown); color: var(--accent-brown); box-shadow: var(--shadow-sm); }
+
+    /* 主舞台 */
+    main { flex: 1; max-width: 1280px; margin: 0 auto; padding: 24px 24px 60px; width: 100%; }
+    .stage-card { background: var(--card-bg); border-radius: var(--radius); border: 2px solid var(--card-border); box-shadow: var(--shadow-md); overflow: hidden; display: flex; flex-direction: column; }
+    
+    /* 情境題目區 */
+    .scenario-header { background: linear-gradient(135deg, #ffffff 0%, #f9f6f0 100%); padding: 32px 40px; border-bottom: 2px solid var(--card-border); }
+    .scenario-title { font-size: 2.1rem; font-weight: 900; color: #151311; margin-bottom: 16px; line-height: 1.3; }
+    .scenario-desc { font-size: 1.35rem; color: #2e2a25; line-height: 1.65; background: #ffffff; padding: 22px 28px; border-radius: 14px; border-left: 6px solid var(--accent-gold); box-shadow: inset 0 0 0 1px var(--card-border); }
+
+    /* 四宮格作答卡片區 (2x2) */
+    .options-section { padding: 32px 40px; }
+    .options-tip-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .options-tip { font-size: 1.15rem; font-weight: 800; color: var(--accent-brown); }
+    .reset-btn { font-size: 0.95rem; font-weight: 600; color: var(--text-muted); cursor: pointer; text-decoration: underline; background: none; border: none; }
+
+    .quad-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 860px) {
+      .quad-grid { grid-template-columns: 1fr; }
+    }
+
+    .quad-card {
+      background: #ffffff;
+      border: 2.5px solid var(--card-border);
+      border-radius: 18px;
+      padding: 26px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 240px;
+      transition: all 0.25s ease;
+      box-shadow: var(--shadow-sm);
+    }
+    .quad-card:hover {
+      border-color: var(--accent-gold);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .card-top { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+    .card-letter {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--accent-soft);
+      color: var(--accent-brown);
+      font-size: 1.7rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .card-text {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    /* 計票列 */
+    .card-vote-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-warm);
+      border: 1px solid var(--card-border);
+      padding: 10px 16px;
+      border-radius: 12px;
+    }
+    .vote-btns { display: flex; align-items: center; gap: 10px; }
+    .v-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1.5px solid var(--card-border);
+      background: #fff;
+      font-size: 1.3rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .v-btn:hover { background: var(--accent-soft); border-color: var(--accent-brown); }
+    .vote-track { flex: 1; height: 14px; background: #e5ddcf; border-radius: 7px; margin: 0 16px; overflow: hidden; }
+    .vote-fill { height: 100%; width: 0%; background: var(--accent-brown); border-radius: 7px; transition: width 0.3s ease; }
+    .vote-count { font-size: 1.2rem; font-weight: 900; color: var(--accent-brown); min-width: 80px; text-align: right; }
+
+    /* 揭曉按鈕 */
+    .action-panel { padding: 24px 40px 36px; display: flex; justify-content: center; border-top: 2px solid var(--card-border); background: #faf7f2; }
+    .reveal-btn {
+      padding: 18px 48px;
+      border-radius: 36px;
+      background: linear-gradient(135deg, #8c572b 0%, #633b19 100%);
+      color: #fff;
+      font-size: 1.35rem;
+      font-weight: 900;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(100, 60, 25, 0.25);
+      transition: all 0.25s;
+    }
+    .reveal-btn:hover { transform: scale(1.03); background: linear-gradient(135deg, #a06634 0%, #73451e 100%); }
+
+    /* 大師公案揭曉卡片 */
+    .master-reveal-card {
+      margin: 20px 40px 40px;
+      background: #fff;
+      border-radius: 20px;
+      border: 3px solid #d4af37;
+      box-shadow: var(--shadow-lg);
+      display: none;
+      overflow: hidden;
+      animation: popIn 0.4s ease forwards;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .master-header {
+      background: linear-gradient(135deg, #26221f 0%, #3d352e 100%);
+      color: #fff;
+      padding: 24px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .master-name { font-size: 1.65rem; font-weight: 900; color: #fcefd6; }
+    .master-origin { font-size: 1.05rem; color: #d4c5b5; }
+    .master-badge { background: #d4af37; color: #241d15; font-size: 1rem; font-weight: 900; padding: 6px 16px; border-radius: 20px; }
+
+    .master-body { padding: 32px; display: flex; flex-direction: column; gap: 24px; }
+    .m-box { background: #fcf9f4; border-radius: 14px; padding: 22px 26px; border: 1.5px solid var(--card-border); }
+    .m-box-title { font-size: 1.2rem; font-weight: 900; color: var(--accent-brown); margin-bottom: 12px; }
+    .m-box-text { font-size: 1.2rem; color: #2b2723; line-height: 1.7; }
+    .antidote-box { background: #f0f7f4; border-color: #bad9ce; }
+    .antidote-box .m-box-title { color: #286353; }
+    .antidote-box .m-box-text { color: #16473b; font-weight: 700; }
+
+    footer { background: #ffffff; border-top: 1px solid var(--card-border); padding: 24px; text-align: center; font-size: 0.95rem; color: var(--text-muted); margin-top: auto; }
+    footer a { color: var(--accent-brown); text-decoration: underline; font-weight: 700; }
   </style>
 </head>
 <body>
+
   <header>
-    <div class="brand-box">
-      <span class="brand-badge">讀書會互動思辨</span>
-      <h1 class="brand-title">Puti-AI | 禪者心燈：現代人生的六大靈魂拷問</h1>
-    </div>
+    <div class="brand-title">Puti-AI | 現場互動思辨：人生關鍵抉擇</div>
     <div class="header-actions">
-      <button class="btn" onclick="toggleProjectorMode()">📽️ 投影模式</button>
-      <button class="btn btn-primary" onclick="openHostGuide()">🎙️ 主持人提問小抄</button>
+      <button class="btn" onclick="toggleFullscreen()">⛶ 全螢幕投影</button>
     </div>
   </header>
 
   <div class="progress-strip" id="tabsStrip"></div>
 
   <main>
-    <div class="question-container" id="qContainer"></div>
+    <div class="stage-card" id="stageCard"></div>
   </main>
-
-  <div class="modal-backdrop" id="hostModal" onclick="closeHostGuide(event)">
-    <div class="modal-sheet" onclick="event.stopPropagation()">
-      <button class="modal-close" onclick="closeHostGuide()">✕</button>
-      <h2 style="font-size: 1.4rem; color: var(--accent-brown); margin-bottom: 14px;">🎙️ 主持人破冰與控場攻防手冊</h2>
-      <div style="font-size: 0.95rem; color: #4a443e; line-height: 1.6; display: flex; flex-direction: column; gap: 14px;">
-        <p><strong>💡 核心心法：不要急著給標準答案，要讓現場「辯起來」！</strong></p>
-        <p>這 6 道題目的選項絕非隨便拼湊，而是代表了現代社會極具說服力的思想流派（管理學、阿德勒課題分離、安寧醫療四道人生、自然無為）。每一個選項都能講出一番極深刻的道理。</p>
-        <hr style="border: 0; border-top: 1px dashed var(--card-border);">
-        <div>
-          <h4 style="color: #2b2723; margin-bottom: 4px;">🎯 推薦主持四步節奏：</h4>
-          <ol style="padding-left: 20px; display: flex; flex-direction: column; gap: 6px;">
-            <li><strong>念出情境（引發共鳴）</strong>：唸出真實生活痛點，詢問：「如果你遇到，你會怎麼做？」</li>
-            <li><strong>全場作答（即時計票）</strong>：請大家舉手，主持人點擊畫面上的「+」按鈕，長條圖立刻動態長高。</li>
-            <li><strong>邀請交鋒（各持己見）</strong>：指名選 A、選 B 的夥伴：「請告訴大家，為什麼你覺得這樣處理最成熟、最合理？」</li>
-            <li><strong>翻牌破執（大師機鋒）</strong>：點擊「揭曉大師神操作」，音效響起，全場翻牌。點破大家思維盲點，引導星雲大師法音。</li>
-          </ol>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <footer>
     <p>屏東縣後庄國小黃朝榮老師作品，免費分享，歡迎擴散推廣，嚴禁商用與任何侵權、不尊重著作權的行為，更多 Puti-AI 教學工具 <a href="https://padlet.com/clongwh/puti_ai_tools" target="_blank">點此前往</a></p>
   </footer>
 
   <script>
+    // 6 大純現代情境題目（零劇透、零公案線索、純粹價值觀激辯）
     const questionsData = [
       {
         id: 1,
-        title: "第 1 題：功德與回報的靈魂拷問",
-        tag: "職場與利他",
-        focus: "破除自我感動與道德執著",
-        desc: "你帶領團隊熬夜幾個月完成了一個重大公益/革新專案，成果輝煌。在慶功大會上，大老闆在全體面前讚賞你，並笑著問你：「這次你投入這麼多心力，為大家立下這麼大的汗馬功勞，你覺得這段時間最大的收穫或意義是什麼？」",
+        tabName: "關鍵專案慶功宴",
+        title: "情境一：重大專案慶功宴上的私下對話",
+        desc: "你帶領跨部門團隊拚死拚活半年，完成了一個挽救公司業績的超大專案。慶功宴結束後，大老闆單獨把你找進辦公室，笑著拍拍你的肩膀問：「這半年辛苦你了，你覺得這段日子你最大的收穫或意義是什麼？」",
         options: [
-          { letter: "A", archetype: "專業實效派", text: "「最大的意義是建立了一套可複製的成功制度，證明了我們團隊的專業價值與執行力。」", rationale: "理性務實。現代職場最推崇的菁英思維，用客觀成果說話。", votes: 0 },
-          { letter: "B", archetype: "道德奉獻派", text: "「看到大家因這個專案而變得更好，我自己有沒有被記住完全不重要，能利他就是最大的福報。」", rationale: "傳統好人/行善典範。絕大多數人都會認為這是最崇高、最慈悲的回答。", votes: 0 },
-          { letter: "C", archetype: "團隊守護派", text: "「這為未來的專案爭取了更多信任與資源，也為團隊每位夥伴爭取了升遷與實質獎勵。」", rationale: "有擔當的好長官。現實主義者極力推崇，照顧跟隨自己的兄弟。", votes: 0 },
-          { letter: "D", archetype: "空性大師神操作", text: "「坦白說，半點功德都沒有；我們只是因緣際會在那裡，順手把這件事做完而已。」", rationale: "看似冷酷不近人情，實則直達最高維度的無相解脫。", votes: 0, isZen: true }
+          {
+            letter: "A",
+            text: "打造了一套標準化流程，證明了我們團隊即使在極限壓力下也能打勝仗。",
+            votes: 0
+          },
+          {
+            letter: "B",
+            text: "看到公司跟夥伴們能渡過難關、大家有成果，我自己被不被看見根本不重要。",
+            votes: 0
+          },
+          {
+            letter: "C",
+            text: "累積了足夠的信任與話語權，接下來能替跟隨我的兄弟爭取更好的調薪與資源。",
+            votes: 0
+          },
+          {
+            letter: "D",
+            text: "老實說，什麼意義都沒有；我們只是碰巧在那裡，把該做的事情做完而已。",
+            votes: 0,
+            isZen: true
+          }
         ],
         master: {
           name: "菩提達摩 祖師",
           origin: "《禪門語錄：了無功德》",
-          story: "梁武帝即位以來，造寺、寫經、度僧無數，自負地問達摩祖師：「朕有何功德？」達摩祖師直接冷冷回道：「並無功德！」武帝大為不滿，問：「為何無功德？」達摩答：「此但是人天小果，有漏之因，如影隨形，雖有非實。真正的真功德，體自空寂，不以世求。」最後兩人話不投機，達摩拂袖渡江北上。",
-          analysis: "星雲大師解碼：梁武帝的善行雖有『福德』，卻無『功德』。為什麼達摩要如此嚴厲？因為武帝貪執功德，心存『我在施恩、我在造善』的對立分別心。一旦有『想要回報、想要被肯定的心』，善事就變成了做買賣。唯有超越『有與無』的執著，行善而不著相，才是禪者真正的本來面目。",
-          antidote: "【給現代人的解藥】：當我們做完一件好事或專案時，別急著陷入『我付出這麼多，為什麼沒被看見』的精神內耗中。事情做完了，隨風吹過，心不掛礙，才是真正的自在。"
+          story: "梁武帝登基以來，建寺、寫經、度僧無數，自負地問達摩祖師：「朕有何功德？」達摩祖師直接冷冷回道：「並無功德！」武帝大驚問其原因，達摩說：「這只是人天小果、有漏之因，如影隨形，雖有非實。真正的真功德，體自空寂，不以世求。」最後兩人話不投機，達摩拂袖渡江北上。",
+          analysis: "梁武帝的善行雖有世俗的福德，卻無真功德。為什麼達摩要如此嚴厲？因為武帝心存『我在行善、我有大功』的執著與傲慢。一旦帶著想被肯定、想換取回報的心去付出，善事就變成了生意買賣。唯有超越『有功與無功』的執著，做完了隨手放下，才是真正的清淨自性。",
+          antidote: "當你為團隊付出一切後，別陷入『為什麼老闆沒特別感謝我』的精神內耗。事情做完，隨風而去，心無罣礙，才是最高級的強大。"
         }
       },
       {
         id: 2,
-        title: "第 2 題：辦公室惡意消耗戰的終極應對",
-        tag: "人際有毒關係",
-        focus: "破除對抗慣性，以無制有",
-        desc: "隔壁單位的主管因利益衝突，連續半年天天用盡各種陰險手段造謠抹黑、搶你資源、在長官面前放冷箭，搞得整個團隊雞犬不寧、身心俱疲。身為負責人，你該採取哪種戰略徹底終結這場混戰？",
+        tabName: "部門惡意放冷箭",
+        title: "情境二：隔壁部門天天找碴放冷箭，你的終極戰略是？",
+        desc: "隔壁單位主管因為利益衝突，這半年天天在背後放冷箭、到處散播不實傳聞、在跨部門會議影射開嗆，甚至故意刁難流程搶資源，搞得你手下組員人心浮躁、士氣受挫。身為負責人，你打算怎麼徹底擺平他？",
         options: [
-          { letter: "A", archetype: "法制維權派", text: "嚴格蒐證，將所有通訊紀錄與程序違規呈報法務與最高層，啟動制度調查，劃清界線。", rationale: "符合現代合規管理標準流程，保護團隊合法權益的最佳途徑。", votes: 0 },
-          { letter: "B", archetype: "博弈對攻派", text: "以其人之道還治其人之身，對方在公關搞鬼就在公關反擊，讓他知道找麻煩的代價極高。", rationale: "賽局理論中的『以牙還牙（Tit-for-Tat）』，展現不好惹的防禦實力。", votes: 0 },
-          { letter: "C", archetype: "高情商融冰派", text: "主動擺一場非正式宴席開誠布公深聊，把部分核心利益分讓出去，化敵為友促成雙贏。", rationale: "傳統官場/商場大師的極致圓滑手腕，沒有永遠的敵人只有共同利益。", votes: 0 },
-          { letter: "D", archetype: "空性大師神操作", text: "完全不回應、不反擊、不自證，每天照常上班喝茶做事，把他所有招數全當作空氣。", rationale: "看似消極擺爛，背後卻是高維度的能量消耗戰。", votes: 0, isZen: true }
+          {
+            letter: "A",
+            text: "蒐集所有通訊截圖與違規證據，正式上報總經理與法務，公事公辦給他好看。",
+            votes: 0
+          },
+          {
+            letter: "B",
+            text: "他放冷箭你就設局回敬，在關鍵大會上狠狠打他臉，讓他知道你絕不是好惹的。",
+            votes: 0
+          },
+          {
+            letter: "C",
+            text: "私下約他吃高檔餐廳開誠布公聊開，把部分成果做成順水人情分給他，化敵為友。",
+            votes: 0
+          },
+          {
+            letter: "D",
+            text: "完全當作空氣，每天準時上班喝茶、專注做自己的事，一句話都懶得回應他。",
+            votes: 0,
+            isZen: true
+          }
         ],
         master: {
           name: "道樹禪師",
           origin: "《禪門語錄：以不變應萬變》",
           story: "道樹禪師建了一所佛寺，與道士的道觀相鄰。道士放不下心結，每天呼風喚雨、變出妖魔鬼怪來騷擾恐嚇寺裡的僧眾，把許多沙彌都嚇跑了，唯獨道樹禪師一住就是十多年。最後道士法術用盡，無計可施，只得把道觀放棄搬走。旁人問禪師勝過的秘訣，禪師說：『我只有一個「無」字能勝他。他「有」法術，有是有限、有盡、有量；而我「無」法術，無是無限、無量、無邊。以無應有，不變應萬變，他自然氣數已盡。』",
-          analysis: "星雲大師解碼：小人的所有手段都是『有』，只要是『有』，就需要耗費精力、時間與算計；而你的心如果是『無』，不接招、不上當，對方每一記重拳全部揮在棉花與虛空中。最高的反擊，不是去打敗對手，而是『徹底奪走他當你對手的資格』。",
-          antidote: "【給現代人的解藥】：面對職場上有毒的八卦與挑釁，你越是激動自證、蒐證反擊，就越陷在對方的泥淖裡。保持內心的『無變』，對方的負能量便無處著力。"
+          analysis: "小人的所有手段都是『有』，只要是『有』，就必須耗損心力、時間與算計；而你的心如果是『無』，不接招、不上當，對方每一記重拳全部揮在空氣與棉花上。最高級的勝出，不是去打敗對手，而是徹底奪走他當你對手的資格！",
+          antidote: "面對職場上有毒的八卦與挑釁，你越是激動自證、蒐證反擊，就越陷在對方的泥淖裡。保持內心的『無變』，對方的負能量便無處著力。"
         }
       },
       {
         id: 3,
-        title: "第 3 題：沉重勞作與完美時機的迷思",
-        tag: "自我管理與拖延",
-        focus: "破除生活外包與形式主義",
-        desc: "正值炎炎盛夏正午，有一批極為重要的原始教材或物資必須在烈日下耗費體力搬運翻曬，你正汗流浹背地搬著。一位極貼心的小組部屬跑過來說：「長官，您位階高、年紀也大了，天氣這麼毒辣容易中暑，這粗活交給我們年輕人做就好，或者等下午太陽下山、天氣涼一點您再來弄吧？」此時你會？",
+        tabName: "酷暑下的突發粗活",
+        title: "情境三：正午 38 度烈日下的突發粗活",
+        desc: "正值炎炎夏日正中午，有一大批極關鍵的教材物資受潮，必須立刻在戶外高溫下搬運翻曬。你剛擦汗搬起重物，一位平時極貼心的年輕部屬跑來勸你：「主管，這太陽太毒辣容易中暑，這粗活交給我們年輕人做就好，或者等下午四點涼一點您再來處理吧？」",
         options: [
-          { letter: "A", archetype: "現代管理授權派", text: "「太感謝你的體貼了，這件事就全權交給你們，我相信大家能辦好，我去把控大方向。」", rationale: "現代 MBA 管理學最完美的回答！懂得分工授權、不微觀管理。", votes: 0 },
-          { letter: "B", archetype: "科學敏捷排程派", text: "「你說得對，正午容易熱傷害且效率低。大家先休息，等下午四點轉涼大家再一口氣做。」", rationale: "重視職場安全與科學人體工學，聰明工作（Work Smart）而非蠻幹。", votes: 0 },
-          { letter: "C", archetype: "熱血同甘共苦派", text: "「謝謝好意，大家一起動手！我多搬一件，你們就少累一件，主管就是要身先士卒！」", rationale: "極具凝聚力的領導魅力，激勵團隊共體時艱。", votes: 0 },
-          { letter: "D", archetype: "空性大師神操作", text: "微笑謝絕，繼續在烈日下彎腰流汗動手，並平靜回答：「這是我的功課，別人代勞不了；此時不曬，待何時？」", rationale: "拒絕外包，當下即是修行。", votes: 0, isZen: true }
+          {
+            letter: "A",
+            text: "「太感謝了！那這件事全交給你們小組負責，我相信大家能搞定，我看大方向。」",
+            votes: 0
+          },
+          {
+            letter: "B",
+            text: "「你說得對，高溫容易熱衰竭。大家先停手吹冷氣，等下午四點轉涼再一口氣搬。」",
+            votes: 0
+          },
+          {
+            letter: "C",
+            text: "「謝謝好意，大家一起動手！我多搬一箱你們就少累一箱，主管就是要以身作則。」",
+            votes: 0
+          },
+          {
+            letter: "D",
+            text: "微笑謝絕，在大太陽下繼續彎腰動手：「這是我的事，別人替不了；現在不曬，待何時？」",
+            votes: 0,
+            isZen: true
+          }
         ],
         master: {
           name: "永平寺老僧（道元禪師甘拜下風）",
           origin: "《禪門語錄：老僧曬香菇》",
           story: "日本永平寺裡有一位八十多歲駝背的老禪師，在大太陽下曬香菇。住持道元禪師看他不忍心，說：『長老年紀這麼大了，何必這麼辛苦，我們可以找年輕人代勞啊！』老禪師冷冷回答：『別人並不是我呀！』道元又勸：『如果一定要做，也不必挑這種酷暑大太陽的時候啊！』老禪師答道：『大太陽天不曬香菇，難道要等到陰天或雨天再來曬嗎？』身為一寺之主的道元禪師，當下心悅誠服。",
-          analysis: "星雲大師解碼：現代人習慣把生活『外包』，請人代勞，或者總是把事情推到『等有空、等好時機』再來做。禪者的生活，無論什麼都不假手他人，也不等到明天。『別人不是我』，『現在不做，要待何時？』當下你所嫌棄的粗活，正是你生命的唯一實相。",
-          antidote: "【給現代人的解藥】：別把人生寄託給『明天的涼快』，也別把生命的體驗都丟給別人替你生活。此時此刻流下的汗水，就是最真切的當下。"
+          analysis: "現代人習慣把生活『外包』給別人，或者總是把該做的事推拖到『等有空、等好時機』。但在禪門看來，勞動作務本身就是唯一的修煉與生活。『別人不是我』，『現在不做待何時？』你把眼前的粗活外包出去，其實是把當下活生生的人生給外包了！",
+          antidote: "別把人生寄託給『明天的涼快』，也別把生命的體驗都推給別人。此時此刻流下的汗水，就是最真切的修行。"
         }
       },
       {
         id: 4,
-        title: "第 4 題：求法焦慮與核心秘笈的迷惘",
-        tag: "成長焦慮與求道",
-        focus: "破除生活與修行割裂的妄想",
-        desc: "你追隨一位資深頂尖的人生導師學習了三年。這三年間，他每天只讓你整理辦公室、收發郵件、端咖啡、買便當，從沒為你開過一堂正式的私董會或傳授獨門秘訣。今天你終於忍不住開口向他請益：「老師，我跟您三年了，您到底何時才願意指點我翻轉人生的核心底層心法？」你認為導師最震撼的回應是？",
+        tabName: "業界天花板的攤牌",
+        title: "情境四：跟隨業界頂尖大佬三年後的攤牌",
+        desc: "你費盡千辛萬苦跟隨一位業界公認的天花板大佬學習了三年。這三年間，他每天只叫你收發快遞、買咖啡、擦桌子、買便當，從沒教過你任何核心技能。今天你終於忍不住開口：「老闆，三年了，您到底什麼時候才要傳授我能翻盤的底層心法？」你希望他怎麼回答？",
         options: [
-          { letter: "A", archetype: "磨練心性派", text: "「磨練心性是為了洗去你的浮躁。連這點枯燥雜事都耐不住，就算給你最高級的心法你也接不住。」", rationale: "傳統嚴師的最佳回覆，強調基礎功與耐受挫折力。", votes: 0 },
-          { letter: "B", archetype: "實踐悟道派", text: "「真正的絕招從來不是教出來的，而是自己在做雜事的規律中摸索出來的，不要指望別人餵飯。」", rationale: "現代啟發式教練技術，強調自主探索與批判性思維。", votes: 0 },
-          { letter: "C", archetype: "空性大師神操作", text: "「你遞咖啡我喝了，你送公文我點頭收了，我哪一天沒在全力示範核心心法？生活每一步就是全部的答案。」", rationale: "平常心是道，搬柴運水皆是佛法。", votes: 0, isZen: true },
-          { letter: "D", archetype: "解構幻象派", text: "「這世上根本沒有任何『底層絕招』，那些宣稱有成功心法的人，都是在販賣你的焦慮。」", rationale: "現代毒舌清醒派，戳破成功學的虛假泡沫。", votes: 0 }
+          {
+            letter: "A",
+            text: "「做雜事是為了磨練心性。連這點枯燥都受不了，把真本事交給你你也接不住。」",
+            votes: 0
+          },
+          {
+            letter: "B",
+            text: "「真正的核心從來不是教出來的，而是在做雜事中自己悟出來的，不要指望別人餵。」",
+            votes: 0
+          },
+          {
+            letter: "C",
+            text: "「你買咖啡我喝了，你送公文我簽了，我哪一天沒在示範？生活每一步就是全部的答案。」",
+            votes: 0,
+            isZen: true
+          },
+          {
+            letter: "D",
+            text: "「別傻了，這世上根本沒有什麼底層心法，那些到處賣秘笈的都是在收割焦慮而已。」",
+            votes: 0
+          }
         ],
         master: {
           name: "天皇道悟禪師",
           origin: "《禪門語錄：茶飯禪》",
           story: "龍潭崇信禪師跟隨天皇道悟出家數年，除了劈柴煮飯、挑水做羹，不曾得到師父半句法要。一天他向師父抱怨：『弟子跟您出家多年，從未得到您的開示，請師父傳授修道心要吧！』道悟立刻回道：『你冤枉我了！自從你來，我未嘗一日不傳授你心要。你端茶給我，我就喝；你捧飯給我，我就吃；你合掌，我就點頭。這哪一刻不在指示心要？』崇信當下頓悟。",
-          analysis: "星雲大師解碼：從這一則問答可以明白『禪就是生活』。現代人最大的迷思，就是把人生切成兩半：一半叫『無聊的日常苟且』，另一半叫『高尚的心法/成功人生』，總以為必須脫離眼前瑣碎才能成就。其實，喝茶吃飯、專注當下，就已具足無限禪機。",
-          antidote: "【給現代人的解藥】：不要天天焦慮追求看不見的『人生大招』。把今天的一頓飯好好吃完、把手頭的一份信好好回完，生命真正的深度就在其中。"
+          analysis: "現代人最大的痛苦，就是把人生割裂成兩半：一半叫『無聊瑣碎的苟且』，另一半叫『高深的核心成功之道』，總以為要脫離眼前的瑣碎才能找到大智慧。其實，能把倒茶吃飯、回信走路這每一刻全然安頓好，就已經具足了全部的智慧。",
+          antidote: "別天天焦慮追逐看不見的『人生絕招』。把手邊的一頓飯好好吃完、手頭的一份信好好回完，生命的深度就在其中。"
         }
       },
       {
         id: 5,
-        title: "第 5 題：精緻利己 vs 救世菩薩的抉擇",
-        tag: "同理心與社會責任",
-        focus: "破除包裝在靈修下的冷漠冷眼",
-        desc: "你的一位好友深入靈修與心靈哲學，個人狀態極佳、情緒穩定、財務自由且不惹塵埃。最近社會或身邊朋友遭遇重大變故陷入泥淖，大家心力交瘁找他商量，他卻平靜地說：「每個人都有各自的因緣與課題，過度干涉只會阻礙對方的靈魂修煉。我們能做的就是修好自己、送上祝福，不強加干預。」你認為這番話的本質是？",
+        tabName: "身邊看破紅塵的朋友",
+        title: "情境五：身邊那位看破紅塵、情緒極度穩定的高人朋友",
+        desc: "你身邊有一位朋友，近年深入研究心靈與哲學，個人狀態極好、情緒穩定、財務自由，對世俗紛擾波瀾不驚。最近身邊好友遭遇重大變故、家庭破碎陷入泥淖，大家找他商量，他卻淡淡地說：「每個人都有自己的課題與因緣，過度干涉只會剝奪別人的成長。我們過好自己、默默祝福就好。」你聽完內心最真實的感受是？",
         options: [
-          { letter: "A", archetype: "課題分離派", text: "高度成熟的智慧。懂得現代心理學的界線感，不濫用廉價同情心去剝奪他人的成長機緣。", rationale: "阿德勒心理學與現代心理諮商的核心觀點，非常多知識分子認同！", votes: 0 },
-          { letter: "B", archetype: "空性大師神操作", text: "這是道貌岸然的自私冷漠！空有一身本領卻對世間苦難毫無擔當，真想一棍打醒這種自了漢！", rationale: "大乘佛法直面人心的雷霆怒喝。", votes: 0, isZen: true },
-          { letter: "C", archetype: "自然無為派", text: "無可厚非。每個人能力有限，與其盲目涉入搞得大家一起下水，維持自身的清淨平衡也是一種對世界的貢獻。", rationale: "道家莊子式的超然哲學，不給世界添亂即是善。", votes: 0 },
-          { letter: "D", archetype: "多元包容派", text: "每個人修行方式不同，有人入世服務，有人出世隱居，沒有高下之分，無需以世俗道德進行批判。", rationale: "現代自由主義的核心精神，尊重個別生命路徑的選擇。", votes: 0 }
+          {
+            letter: "A",
+            text: "這是真正成熟且有邊界感的智慧，懂得課題分離，不濫用廉價同情心。",
+            votes: 0
+          },
+          {
+            letter: "B",
+            text: "這根本是包裝在高級話術下的精緻利己與冷漠，空有本領卻冷眼旁觀，真想狠狠打醒他！",
+            votes: 0,
+            isZen: true
+          },
+          {
+            letter: "C",
+            text: "很羨慕他能修煉到這種境界，每個人能力有限，照顧好自己本來就沒有錯。",
+            votes: 0
+          },
+          {
+            letter: "D",
+            text: "每個人對生活的選擇不同，有人入世幫忙，有人出世修心，沒有誰比誰高尚。",
+            votes: 0
+          }
         ],
         master: {
           name: "黃檗希運禪師",
           origin: "《禪門語錄：自了漢》",
           story: "黃檗禪師遊天台山時，遇到一位舉止奇異的同參，相談甚歡。當兩人走到一條暴漲湍急的溪水前時，同參撩起褲腳，竟然踏著水面如履平地般走過，還回頭招手大喊：『來呀！快過來呀！』黃檗一見，勃然大怒罵道：『嘿！你這小乘自了漢！早知你有這般神通，我剛才就該砍斷你的腳跟！』那同行僧人聽了黃檗的大罵，深受感動嘆道：『你真是大乘的法器，實在說，我不如你啊！』說罷隱沒不見。",
-          analysis: "星雲大師解碼：佛教分大乘與小乘。小乘重自度，大乘重度他。小乘聖者縱然修成神通，也不及初發心的大乘行者。『拔一毛而利天下，吾不為也』永遠無法成佛。自己未度，先能度人，才是菩薩心腸。黃檗痛斥自了漢，正是禪宗最熾熱的大悲血性！",
-          antidote: "【給現代人的解藥】：別把『課題分離』當成見死不救的擋箭牌。真正的禪者不是冷眼看世界的孤島，而是哪怕自己鞋子濕透，也要伸手去拉身邊人一把的熱忱。"
+          analysis: "佛教分大乘與小乘。小乘重自度，大乘重度他。小乘聖者縱然修成神通行如虛空，也不及初發心的大乘行者。『拔一毛而利天下，吾不為也』永遠無法成佛。自己未度，先能度人，才是菩薩心腸。黃檗痛斥自了漢，正是禪宗最熾熱的大悲血性！",
+          antidote: "別把『課題分離』當成見死不救的擋箭牌。真正的禪者不是冷眼看世界的孤島，而是哪怕自己鞋子濕透，也要伸手去拉身邊人一把的熱忱。"
         }
       },
       {
         id: 6,
-        title: "第 6 題：生死大關前的最高瀟灑姿態",
-        tag: "生死觀與告別",
-        focus: "視生死如遊戲，超越悲喜分別",
-        desc: "如果要在一個至親臨終或人生最後告別的場景中，展現一個人對生命生死的「極致超脫與圓融」，哪種情景最令你折服與震撼？",
+        tabName: "最後一幕告別",
+        title: "情境六：如果能自主選擇人生最後一幕告別...",
+        desc: "如果能替自己或摯愛的人生最後那一刻設定一種氛圍，你最嚮往哪一種告別場景？",
         options: [
-          { letter: "A", archetype: "深情道別派", text: "親友圍聚床前，平靜而深情地互道「感謝、道歉、道愛、道別」（四道人生），溫柔相擁而終。", rationale: "現代安寧療護推崇的最高典範，圓滿無憾、情感深刻。", votes: 0 },
-          { letter: "B", archetype: "肅穆莊嚴派", text: "屏除一切世俗雜情，在莊嚴肅穆的經聲念佛聲中，端坐合掌，安詳步入涅槃境界。", rationale: "傳統信仰最敬仰的圓寂典範，崇高而聖潔。", votes: 0 },
-          { letter: "C", archetype: "空性大師神操作", text: "全家人像在玩捉迷藏開玩笑：女兒騙父親搶先坐化，父親笑罵女兒頑皮，兒子在田裡拄鋤立化，談笑間出入生死。", rationale: "徹底把生死當成遊戲，無來無去。", votes: 0, isZen: true },
-          { letter: "D", archetype: "自然無痕派", text: "如同秋葉自樹梢飄落，不留遺言、不打擾任何人，靜悄悄走向山林消失於天地之間。", rationale: "魏晉風骨與隱士情懷，乾淨純粹的終結。", votes: 0 }
+          {
+            letter: "A",
+            text: "親友圍在床邊，彼此溫柔地互道「感謝、道歉、道愛、道別」，安詳相擁落幕。",
+            votes: 0
+          },
+          {
+            letter: "B",
+            text: "在莊嚴肅穆的祝禱與誦經聲中，沒有世俗雜念，心無罣礙地安詳遠去。",
+            votes: 0
+          },
+          {
+            letter: "C",
+            text: "全家人像在玩捉迷藏開玩笑：搶著說「我先走一步了」，在談笑打趣中輕鬆離去。",
+            votes: 0,
+            isZen: true
+          },
+          {
+            letter: "D",
+            text: "像秋葉從枝頭自然飄落，不留遺言、不打擾任何人，靜悄悄走向山林消失。",
+            votes: 0
+          }
         ],
         master: {
           name: "龐蘊居士 一家",
           origin: "《禪宗大師：中國的維摩詰大士》",
           story: "龐蘊居士一家四口皆是禪門高人。龐翁將遷化之際，叫女兒靈照去門外看天色。靈照回來說：『日正當中，而且有日蝕呢！』龐翁走出門看，靈照趁機坐上父親的座椅合掌坐化！龐翁回房笑道：『我女機鋒敏捷啊！』於是延後七天，枕在州牧于公膝上安詳遷化。龐婆得知後感嘆父女不告而別，去田裡告訴兒子，兒子聽了『嘎』一聲拄著鋤頭立化而去！龐婆火化兒子後留偈『雙手撥開無縫石，不留蹤跡與人知』，亦不知所終。",
-          analysis: "星雲大師解碼：龐蘊一家四人，談笑之間出入生死，或坐、或站、或臥，展現禪者視生死如遊戲的瀟灑禪風。一般人把死亡視為恐怖與悲劇，但對透徹自性的人來說，肉身的聚散就如同四季交替、更換衣裳，根本沒有生死之相。",
-          antidote: "【給現代人的解藥】：當你看透了『本來無一物』，死亡便不再是恐懼的終點，而只是一場輕快的捉迷藏。瀟灑生活，也能瀟灑告別。"
+          analysis: "龐蘊一家四人，談笑之間出入生死，或坐、或站、或臥，展現禪者視生死如遊戲的瀟灑禪風。一般人把死亡視為恐怖與悲劇，但對透徹自性的人來說，肉身的聚散就如同四季交替、更換衣裳，根本沒有生死之相。",
+          antidote: "當你看透了『本來無一物』，死亡便不再是恐懼的終點，而只是一場輕快的捉迷藏。瀟灑生活，也能瀟灑告別。"
         }
       }
     ];
@@ -267,9 +428,7 @@
         if (!audioCtx) {
           audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
-        if (audioCtx.state === 'suspended') {
-          audioCtx.resume();
-        }
+        if (audioCtx.state === 'suspended') audioCtx.resume();
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
@@ -281,9 +440,7 @@
         gain.connect(audioCtx.destination);
         osc.start();
         osc.stop(audioCtx.currentTime + 0.9);
-      } catch (e) {
-        console.log("Audio not supported");
-      }
+      } catch (e) {}
     }
 
     function renderTabs() {
@@ -293,58 +450,46 @@
         const tab = document.createElement("div");
         tab.className = `q-tab ${idx === currentQIndex ? 'active' : ''}`;
         tab.onclick = () => switchQuestion(idx);
-        tab.innerHTML = `
-          <span class="q-num">Q${q.id}・${q.tag}</span>
-          <span class="q-name">${q.title.split("：")[1]}</span>
-        `;
+        tab.innerText = `情境 ${q.id}：${q.tabName}`;
         container.appendChild(tab);
       });
     }
 
     function renderQuestion() {
       const q = questionsData[currentQIndex];
-      const container = document.getElementById("qContainer");
+      const container = document.getElementById("stageCard");
       const totalVotes = q.options.reduce((sum, opt) => sum + opt.votes, 0);
 
       container.innerHTML = `
         <div class="scenario-header">
-          <div class="tag-row">
-            <span class="scenario-tag">${q.tag}</span>
-            <span class="focus-tag">💡 思辨焦點：${q.focus}</span>
-          </div>
           <h2 class="scenario-title">${q.title}</h2>
           <div class="scenario-desc">${q.desc}</div>
         </div>
 
         <div class="options-section">
-          <div class="section-intro-bar">
-            <span class="section-tip">請各位夥伴選擇你的直覺做法（點選 ＋／− 即時計票）：</span>
-            <button class="reset-votes-btn" onclick="resetCurrentVotes()">重置本題票數</button>
+          <div class="options-tip-bar">
+            <span class="options-tip">👉 請大家舉手表決你的直覺抉擇（點選 ＋／− 即時計票）：</span>
+            <button class="reset-btn" onclick="resetCurrentVotes()">重置本題票數</button>
           </div>
 
-          <div class="options-grid">
+          <div class="quad-grid">
             ${q.options.map((opt, optIdx) => {
               const percent = totalVotes > 0 ? Math.round((opt.votes / totalVotes) * 100) : 0;
               return `
-                <div class="option-card">
-                  <div class="opt-header-row">
-                    <div class="opt-letter">${opt.letter}</div>
-                    <div class="opt-content">
-                      <span class="opt-archetype">${opt.archetype}</span>
-                      <div class="opt-text">${opt.text}</div>
-                      <div class="opt-rationale">💬 <strong>流派剖析：</strong>${opt.rationale}</div>
-                    </div>
+                <div class="quad-card">
+                  <div class="card-top">
+                    <div class="card-letter">${opt.letter}</div>
+                    <div class="card-text">${opt.text}</div>
                   </div>
-                  
-                  <div class="vote-counter-box">
+                  <div class="card-vote-bar">
                     <div class="vote-btns">
                       <button class="v-btn" onclick="changeVote(${optIdx}, -1)">−</button>
                       <button class="v-btn" onclick="changeVote(${optIdx}, 1)">＋</button>
                     </div>
-                    <div class="vote-progress-track">
-                      <div class="vote-progress-fill" style="width: ${percent}%;"></div>
+                    <div class="vote-track">
+                      <div class="vote-fill" style="width: ${percent}%;"></div>
                     </div>
-                    <div class="vote-badge">${opt.votes} 票 (${percent}%)</div>
+                    <div class="vote-count">${opt.votes} 票 (${percent}%)</div>
                   </div>
                 </div>
               `;
@@ -352,37 +497,32 @@
           </div>
         </div>
 
-        <div class="action-control-panel">
+        <div class="action-panel">
           <button class="reveal-btn" onclick="revealMasterAnswer()">
-            <span>🔔 揭曉禪宗大師神操作</span>
+            🔔 揭曉禪宗大師如何出招
           </button>
         </div>
 
         <div class="master-reveal-card" id="masterCard">
-          <div class="reveal-banner">
-            <div class="master-info">
-              <span class="master-avatar-pill">機鋒</span>
-              <div class="master-name-box">
-                <h3>大師登場：${q.master.name}</h3>
-                <span>出處典故：${q.master.origin}</span>
-              </div>
+          <div class="master-header">
+            <div>
+              <div class="master-name">大師登場：${q.master.name}</div>
+              <div class="master-origin">經典出處：${q.master.origin}</div>
             </div>
-            <div style="font-size: 0.9rem; background: rgba(255,255,255,0.15); padding: 4px 12px; border-radius: 20px;">
-              選中大師思維：選項 ${q.options.find(o => o.isZen).letter}
-            </div>
+            <div class="master-badge">對應神操作：選項 ${q.options.find(o => o.isZen).letter}</div>
           </div>
           <div class="master-body">
-            <div class="body-box">
-              <div class="box-title">📜 【原汁原味禪門公案】</div>
-              <p class="quote-text">${q.master.story}</p>
+            <div class="m-box">
+              <div class="m-box-title">📜 【原汁原味禪門公案】</div>
+              <div class="m-box-text">${q.master.story}</div>
             </div>
-            <div class="body-box">
-              <div class="box-title">✨ 【星雲大師法音解碼】</div>
-              <p class="explanation-text">${q.master.analysis}</p>
+            <div class="m-box">
+              <div class="m-box-title">✨ 【星雲大師法音解析】</div>
+              <div class="m-box-text">${q.master.analysis}</div>
             </div>
-            <div class="antidote-box">
-              <div class="box-title">💊 【現代人間解藥】</div>
-              <p class="explanation-text" style="color: #1a4d40; font-weight: 600;">${q.master.antidote}</p>
+            <div class="m-box antidote-box">
+              <div class="m-box-title">💊 【現代人間解藥】</div>
+              <div class="m-box-text">${q.master.antidote}</div>
             </div>
           </div>
         </div>
@@ -417,24 +557,19 @@
       }
     }
 
-    function toggleProjectorMode() {
-      document.body.classList.toggle("projector-mode");
-    }
-
-    function openHostGuide() {
-      document.getElementById("hostModal").style.display = "flex";
-    }
-
-    function closeHostGuide(e) {
-      if (e) e.stopPropagation();
-      document.getElementById("hostModal").style.display = "none";
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
     }
 
     document.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight") {
-        if (currentQIndex < questionsData.length - 1) switchQuestion(currentQIndex + 1);
-      } else if (e.key === "ArrowLeft") {
-        if (currentQIndex > 0) switchQuestion(currentQIndex - 1);
+      if (e.key === "ArrowRight" && currentQIndex < questionsData.length - 1) {
+        switchQuestion(currentQIndex + 1);
+      } else if (e.key === "ArrowLeft" && currentQIndex > 0) {
+        switchQuestion(currentQIndex - 1);
       } else if (e.key === " ") {
         revealMasterAnswer();
       }
