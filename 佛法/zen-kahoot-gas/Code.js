@@ -120,7 +120,7 @@ function hostAction(action, data) {
     }
 
     props.setProperty('GAME_STATE', JSON.stringify(state));
-    return { success: true, state: state };
+    return getGameState();
   } catch(e) {
     return { success: false, msg: e.toString() };
   } finally {

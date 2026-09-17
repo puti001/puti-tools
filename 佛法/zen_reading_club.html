@@ -627,8 +627,6 @@
       Puti-AI | 禪者心燈：人生關鍵抉擇
     </div>
     <div class="header-actions">
-      <!-- 輕快作答背景音樂開關 -->
-      <button class="btn" id="bgmToggleBtn" onclick="toggleBgm()"><i class="fa-solid fa-music"></i> <span id="bgmLabel">作答音樂</span></button>
       <!-- 講者端專用按鈕 -->
       <button class="btn" id="resetGameBtn" style="display:none;" onclick="hostResetAll()"><i class="fa-solid fa-rotate-left"></i> 重置全場</button>
       <button class="btn" id="fsBtn" style="display:none;" onclick="toggleFullscreen()"><i class="fa-solid fa-expand"></i> 全螢幕</button>
@@ -892,145 +890,38 @@
       myChoice: null
     };
 
-    let audioCtx = null;
-    let bgmTimer = null;
-    let bgmStep = 0;
-    let isBgmEnabled = false; // 預設靜音，點擊右上角按鈕才開啟，保證絕對不影響任何版面與功能
-
-    const scaleFreqs = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
-    const kahootPattern = [0, 2, 4, 2, 5, 4, 2, 1, 0, 4, 3, 2, 5, 4, 3, 2];
-
-    function getAudioCtx() {
-      try {
-        if (!audioCtx) {
-          const AudioClass = window.AudioContext || window.webkitAudioContext;
-          if (AudioClass) audioCtx = new AudioClass();
-        }
-        if (audioCtx && audioCtx.state === 'suspended') {
-          audioCtx.resume().catch(() => {});
-        }
-        return audioCtx;
-      } catch(e) {
-        return null;
-      }
-    }
-
-    function playMarimbaNote(freq, time, duration, gainLevel) {
-      try {
-        const ctx = getAudioCtx();
-        if (!ctx || ctx.state !== 'running') return;
-        const startTime = Math.max(ctx.currentTime, time || ctx.currentTime);
-        const gVal = gainLevel || 0.35;
-
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(freq, startTime);
-        
-        gain.gain.setValueAtTime(0.0001, startTime);
-        gain.gain.linearRampToValueAtTime(gVal, startTime + 0.012);
-        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(startTime);
-        osc.stop(startTime + duration + 0.05);
-      } catch(e) {}
-    }
-
-    function playKahootBeat() {
-      try {
-        const ctx = getAudioCtx();
-        if (!ctx || ctx.state !== 'running') return;
-        const now = ctx.currentTime;
-        const noteIdx = kahootPattern[bgmStep % kahootPattern.length];
-        playMarimbaNote(scaleFreqs[noteIdx], now, 0.22, 0.3);
-        if (bgmStep % 4 === 0) {
-          playMarimbaNote(130.81, now, 0.25, 0.25);
-        }
-        bgmStep++;
-      } catch(e) {}
-    }
-
-    function startKahootBGM() {
-      if (!isBgmEnabled) return;
-      const ctx = getAudioCtx();
-      if (!ctx || ctx.state !== 'running') return;
-      if (bgmTimer) return;
-      bgmStep = 0;
-      playKahootBeat();
-      bgmTimer = setInterval(() => {
-        if (!isBgmEnabled || localState.status !== 'answering') {
-          stopKahootBGM();
-          return;
-        }
-        playKahootBeat();
-      }, 220);
-    }
-
-    function stopKahootBGM() {
-      if (bgmTimer) {
-        clearInterval(bgmTimer);
-        bgmTimer = null;
-      }
-    }
-
-    function playStopFanfare() {
-      if (!isBgmEnabled) return;
-      try {
-        const ctx = getAudioCtx();
-        if (!ctx || ctx.state !== 'running') return;
-        const now = ctx.currentTime;
-        playMarimbaNote(523.25, now, 0.25, 0.4);
-        playMarimbaNote(659.25, now + 0.09, 0.25, 0.4);
-        playMarimbaNote(783.99, now + 0.18, 0.5, 0.45);
-      } catch(e) {}
-    }
-
-    function playZenBell() {
-      try {
-        const ctx = getAudioCtx();
-        if (!ctx || ctx.state !== 'running') return;
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(220, ctx.currentTime + 0.8);
-        gain.gain.setValueAtTime(0.6, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.2);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 1.2);
-      } catch(e) {}
-    }
-
-    // 點擊右上角按鈕手動切換作答音樂
-    function toggleBgm() {
-      const ctx = getAudioCtx();
-      if (ctx && ctx.state === 'suspended') {
-        ctx.resume();
-      }
-      isBgmEnabled = !isBgmEnabled;
-      const btn = document.getElementById("bgmToggleBtn");
-      if (btn) {
-        if (isBgmEnabled) {
-          btn.innerHTML = '<i class="fa-solid fa-music"></i> <span id="bgmLabel">作答音樂：開</span>';
-          btn.style.background = "#E07A5F";
-          btn.style.color = "#fff";
-          if (localState.status === 'answering') startKahootBGM();
-        } else {
-          stopKahootBGM();
-          btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> <span id="bgmLabel">作答音樂：關</span>';
-          btn.style.background = "#fff";
-          btn.style.color = "var(--text-muted)";
-        }
-      }
-    }
-
     function safeSetDisplay(id, val) {
       const el = document.getElementById(id);
       if (el) el.style.display = val;
+    }
+
+    function renderQRCodeSafe(containerId, text, size) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = "";
+      let rendered = false;
+      if (typeof QRCode !== "undefined") {
+        try {
+          new QRCode(container, {
+            text: text,
+            width: size,
+            height: size,
+            colorDark: "#332C2B",
+            colorLight: "#FFFFFF",
+            correctLevel: QRCode.CorrectLevel.M
+          });
+          rendered = true;
+        } catch(e) {}
+      }
+      if (!rendered) {
+        const img = document.createElement("img");
+        img.src = "https://api.qrserver.com/v1/create-qr-code/?size=" + size + "x" + size + "&data=" + encodeURIComponent(text);
+        img.style.width = size + "px";
+        img.style.height = size + "px";
+        img.style.borderRadius = "8px";
+        img.alt = "QR Code";
+        container.appendChild(img);
+      }
     }
 
     function initUI() {
@@ -1073,41 +964,24 @@
     }
 
     function generateHostQR() {
-      const qrEl = document.getElementById("hostQRCode");
-      qrEl.innerHTML = "";
       const baseUrl = appUrl || window.location.href.split("?")[0];
       const playerUrl = baseUrl + "?role=player";
-      new QRCode(qrEl, {
-        text: playerUrl,
-        width: 130,
-        height: 130,
-        colorDark: "#332C2B",
-        colorLight: "#FFFFFF",
-        correctLevel: QRCode.CorrectLevel.M
-      });
+      renderQRCodeSafe("hostQRCode", playerUrl, 130);
     }
 
     // 點擊放大超巨大 QR Code (供遠處全場手機輕鬆掃碼)
     function openLargeQR() {
       const modal = document.getElementById("qrModal");
-      const box = document.getElementById("largeQRCode");
-      box.innerHTML = "";
       const baseUrl = appUrl || window.location.href.split("?")[0];
       const playerUrl = baseUrl + "?role=player";
-      new QRCode(box, {
-        text: playerUrl,
-        width: 320,
-        height: 320,
-        colorDark: "#332C2B",
-        colorLight: "#FFFFFF",
-        correctLevel: QRCode.CorrectLevel.M
-      });
-      modal.style.display = "flex";
+      renderQRCodeSafe("largeQRCode", playerUrl, 320);
+      if (modal) modal.style.display = "flex";
     }
 
     function closeLargeQR(e) {
       if (e) e.stopPropagation();
-      document.getElementById("qrModal").style.display = "none";
+      const modal = document.getElementById("qrModal");
+      if (modal) modal.style.display = "none";
     }
 
     function startPolling() {
@@ -1118,34 +992,13 @@
     function fetchState() {
       if (typeof google === 'undefined' || !google.script || !google.script.run) {
         renderStage();
-        if (localState.status === 'answering' && isBgmEnabled && !bgmTimer) {
-          startKahootBGM();
-        }
         return;
       }
       google.script.run
         .withSuccessHandler(function(res) {
           if (res && res.success) {
-            const prevStatus = localState.status;
             localState = res;
             renderStage();
-
-            // 音訊狀態自動連動 (Kahoot 風格)
-            if (localState.status === 'answering') {
-              if (prevStatus !== 'answering' || !bgmTimer) {
-                startKahootBGM(); // 開放作答時播放輕快音樂
-              }
-            } else if (localState.status === 'ended') {
-              stopKahootBGM(); // 截止作答時立刻停止音樂
-              if (prevStatus === 'answering') {
-                playStopFanfare(); // 開票小號角叮咚聲
-              }
-            } else if (localState.status === 'revealed') {
-              stopKahootBGM();
-              if (prevStatus !== 'revealed') {
-                playZenBell(); // 揭曉大師木魚磬聲
-              }
-            }
           }
         })
         .getGameState(voterId);
@@ -1275,7 +1128,6 @@
     }
 
     function playerVote(choice) {
-      unlockAudio();
       if (localState.status !== 'answering') return;
       localState.myChoice = choice;
       if (typeof google === 'undefined' || !google.script || !google.script.run) {
@@ -1321,14 +1173,10 @@
     }
 
     function hostRevealMaster() {
-      if (localState.status !== 'revealed') {
-        playZenBell();
-      }
       callHostAction('revealMaster');
     }
 
     function callHostAction(action, data) {
-      unlockAudio();
       if (typeof google === 'undefined' || !google.script || !google.script.run) {
         if (action === 'startQuestion') {
           localState.currentQ = data.qIndex;
@@ -1336,24 +1184,18 @@
           localState.votes = { A: 0, B: 0, C: 0, D: 0 };
           localState.voterCount = 0;
           localState.myChoice = null;
-          startKahootBGM();
         } else if (action === 'endVoting') {
           localState.status = 'ended';
-          stopKahootBGM();
-          playStopFanfare();
         } else if (action === 'reopenVote') {
           localState.status = 'answering';
-          startKahootBGM();
         } else if (action === 'revealMaster') {
           localState.status = (localState.status === 'revealed') ? 'ended' : 'revealed';
-          if (localState.status === 'revealed') playZenBell();
         } else if (action === 'resetAll') {
           localState.currentQ = 0;
           localState.status = 'answering';
           localState.votes = { A: 0, B: 0, C: 0, D: 0 };
           localState.voterCount = 0;
           localState.myChoice = null;
-          startKahootBGM();
         }
         renderStage();
         return;
@@ -1361,8 +1203,10 @@
       google.script.run
         .withSuccessHandler(function(res) {
           if (res && res.success) {
-            localState = res.state;
+            localState = res;
             renderStage();
+          } else {
+            fetchState();
           }
         })
         .hostAction(action, data);
