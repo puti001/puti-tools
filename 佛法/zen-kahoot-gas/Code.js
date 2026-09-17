@@ -107,8 +107,10 @@ function hostAction(action, data) {
       state.votes = { "A": 0, "B": 0, "C": 0, "D": 0 };
       state.voters = {};
     } else if (action === 'reopenVote') {
-      // 重新開放本題作答
+      // 重新開放本題作答：重置本題票數與記錄
       state.status = 'answering';
+      state.votes = { "A": 0, "B": 0, "C": 0, "D": 0 };
+      state.voters = {};
     } else if (action === 'endVoting') {
       // 截止作答並開票
       state.status = 'ended';

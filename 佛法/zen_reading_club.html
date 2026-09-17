@@ -1188,6 +1188,9 @@
           localState.status = 'ended';
         } else if (action === 'reopenVote') {
           localState.status = 'answering';
+          localState.votes = { A: 0, B: 0, C: 0, D: 0 };
+          localState.voterCount = 0;
+          localState.myChoice = null;
         } else if (action === 'revealMaster') {
           localState.status = (localState.status === 'revealed') ? 'ended' : 'revealed';
         } else if (action === 'resetAll') {
