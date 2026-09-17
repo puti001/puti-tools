@@ -1,98 +1,285 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Puti-AI | 讀書會現場互動思辨：人生關鍵抉擇</title>
+  <title>Puti-AI | 禪者心燈：現場思辨互動</title>
+  <!-- Google Fonts 日系暖心圓體 Zen Maru Gothic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <style>
     :root {
-      --bg-warm: #f7f4ef;
-      --card-bg: #ffffff;
-      --card-border: #dfd7cb;
-      --text-main: #1f1c19;
-      --text-muted: #6e665d;
-      --accent-brown: #7c4d25;
-      --accent-gold: #b38226;
-      --accent-soft: #f0e6d8;
-      --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
-      --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
-      --shadow-lg: 0 16px 36px rgba(0,0,0,0.12);
-      --radius: 18px;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif; -webkit-font-smoothing: antialiased; }
-    body { background-color: var(--bg-warm); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
-    
-    /* 頂部列 */
-    header { background: #ffffff; border-bottom: 2px solid var(--card-border); padding: 14px 28px; position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; }
-    .brand-title { font-size: 1.35rem; font-weight: 900; color: var(--accent-brown); letter-spacing: 0.5px; }
-    .header-actions { display: flex; align-items: center; gap: 12px; }
-    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 24px; font-size: 1rem; font-weight: 700; cursor: pointer; border: 1.5px solid var(--card-border); background: #fff; color: var(--text-main); transition: all 0.2s; }
-    .btn:hover { background: var(--accent-soft); border-color: var(--accent-gold); }
-    .btn-primary { background: var(--accent-brown); color: #fff; border-color: var(--accent-brown); }
-    .btn-primary:hover { background: #633c1a; }
+      --bg-body: #FFFDF9; /* 暖米白 */
+      --bg-card: #FFFFFF; /* 純白卡片 */
+      --border-warm: #EFE8DE; /* 暖米色邊框 */
+      --text-main: #332C2B; /* 深炭褐 */
+      --text-muted: #7E7571; /* 柔灰褐 */
+      
+      /* 莫蘭迪暖調粉彩四原色 */
+      --color-a: #E07A5F; /* 珊瑚陶土粉 */
+      --color-b: #81B29A; /* 抹茶柔綠 */
+      --color-c: #F2CC8F; /* 暖陽軟糖黃 */
+      --color-d: #3D5A80; /* 謐藍深褐 */
 
-    /* 題目導覽切換列 */
-    .progress-strip { display: flex; background: #ffffff; border-bottom: 1px solid var(--card-border); overflow-x: auto; padding: 10px 24px; gap: 12px; }
-    .q-tab { flex: 1; min-width: 140px; padding: 12px 14px; border-radius: 12px; background: var(--bg-warm); border: 1.5px solid var(--card-border); text-align: center; cursor: pointer; transition: all 0.2s; font-size: 1.05rem; font-weight: 800; color: var(--text-muted); }
-    .q-tab.active { background: var(--accent-soft); border-color: var(--accent-brown); color: var(--accent-brown); box-shadow: var(--shadow-sm); }
+      --accent-brown: #7C4D25;
+      --accent-gold: #C49A45;
+      --accent-soft: #F5EEE6;
+
+      --shadow-sm: 0 4px 14px rgba(124, 77, 37, 0.05);
+      --shadow-md: 0 10px 28px rgba(124, 77, 37, 0.09);
+      --shadow-lg: 0 18px 45px rgba(124, 77, 37, 0.13);
+      --radius-lg: 24px;
+      --radius-pill: 40px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Zen Maru Gothic', -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      letter-spacing: 0.03em;
+    }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.75;
+    }
+
+    /* 頂部列 */
+    header {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 2px solid var(--border-warm);
+      padding: 14px 28px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-title {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: var(--accent-brown);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-badge {
+      background: var(--accent-brown);
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: var(--radius-pill);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 20px;
+      border-radius: var(--radius-pill);
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1.5px solid var(--border-warm);
+      background: #fff;
+      color: var(--text-main);
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent-gold);
+    }
+
+    /* 題目切換索引列 */
+    .progress-strip {
+      display: flex;
+      background: #ffffff;
+      border-bottom: 1.5px solid var(--border-warm);
+      overflow-x: auto;
+      padding: 10px 24px;
+      gap: 12px;
+    }
+
+    .q-tab {
+      flex: 1;
+      min-width: 145px;
+      padding: 11px 14px;
+      border-radius: 16px;
+      background: var(--bg-body);
+      border: 1.5px solid var(--border-warm);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--text-muted);
+    }
+
+    .q-tab.active {
+      background: var(--accent-soft);
+      border-color: var(--accent-brown);
+      color: var(--accent-brown);
+      box-shadow: var(--shadow-sm);
+    }
 
     /* 主舞台 */
-    main { flex: 1; max-width: 1280px; margin: 0 auto; padding: 24px 24px 60px; width: 100%; }
-    .stage-card { background: var(--card-bg); border-radius: var(--radius); border: 2px solid var(--card-border); box-shadow: var(--shadow-md); overflow: hidden; display: flex; flex-direction: column; }
-    
+    main {
+      flex: 1;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 24px 60px;
+      width: 100%;
+    }
+
+    .stage-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 2px solid var(--border-warm);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
     /* 情境題目區 */
-    .scenario-header { background: linear-gradient(135deg, #ffffff 0%, #f9f6f0 100%); padding: 32px 40px; border-bottom: 2px solid var(--card-border); }
-    .scenario-title { font-size: 2.1rem; font-weight: 900; color: #151311; margin-bottom: 16px; line-height: 1.3; }
-    .scenario-desc { font-size: 1.35rem; color: #2e2a25; line-height: 1.65; background: #ffffff; padding: 22px 28px; border-radius: 14px; border-left: 6px solid var(--accent-gold); box-shadow: inset 0 0 0 1px var(--card-border); }
+    .scenario-header {
+      background: linear-gradient(135deg, #ffffff 0%, #faf6ef 100%);
+      padding: 32px 40px;
+      border-bottom: 2px solid var(--border-warm);
+    }
+
+    .scenario-title {
+      font-size: 2.1rem;
+      font-weight: 900;
+      color: #211c19;
+      margin-bottom: 16px;
+      line-height: 1.35;
+    }
+
+    .scenario-desc {
+      font-size: 1.35rem;
+      color: #3d3632;
+      line-height: 1.7;
+      background: #ffffff;
+      padding: 22px 28px;
+      border-radius: 18px;
+      border-left: 6px solid var(--accent-gold);
+      box-shadow: inset 0 0 0 1px var(--border-warm);
+    }
 
     /* 四宮格作答卡片區 (2x2) */
-    .options-section { padding: 32px 40px; }
-    .options-tip-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .options-tip { font-size: 1.15rem; font-weight: 800; color: var(--accent-brown); }
-    .reset-btn { font-size: 0.95rem; font-weight: 600; color: var(--text-muted); cursor: pointer; text-decoration: underline; background: none; border: none; }
+    .options-section {
+      padding: 32px 40px;
+    }
 
-    .quad-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .options-tip-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .options-tip {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--accent-brown);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .reset-btn {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      text-decoration: underline;
+      background: none;
+      border: none;
+    }
+
+    .quad-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
     @media (max-width: 860px) {
       .quad-grid { grid-template-columns: 1fr; }
     }
 
     .quad-card {
       background: #ffffff;
-      border: 2.5px solid var(--card-border);
-      border-radius: 18px;
+      border: 2.5px solid var(--border-warm);
+      border-radius: var(--radius-lg);
       padding: 26px 28px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 240px;
+      min-height: 230px;
       transition: all 0.25s ease;
       box-shadow: var(--shadow-sm);
     }
+
+    .quad-card.card-A { border-top: 8px solid var(--color-a); }
+    .quad-card.card-B { border-top: 8px solid var(--color-b); }
+    .quad-card.card-C { border-top: 8px solid var(--color-c); }
+    .quad-card.card-D { border-top: 8px solid var(--color-d); }
+
     .quad-card:hover {
-      border-color: var(--accent-gold);
       box-shadow: var(--shadow-md);
       transform: translateY(-2px);
     }
 
-    .card-top { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 20px; }
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
     .card-letter {
       width: 52px;
       height: 52px;
-      border-radius: 14px;
-      background: var(--accent-soft);
-      color: var(--accent-brown);
+      border-radius: 16px;
       font-size: 1.7rem;
       font-weight: 900;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      color: #fff;
     }
+
+    .card-A .card-letter { background: var(--color-a); }
+    .card-B .card-letter { background: var(--color-b); }
+    .card-C .card-letter { background: var(--color-c); color: #332C2B; }
+    .card-D .card-letter { background: var(--color-d); }
+
     .card-text {
       font-size: 1.35rem;
       font-weight: 700;
       color: var(--text-main);
-      line-height: 1.5;
+      line-height: 1.55;
     }
 
     /* 計票列 */
@@ -100,17 +287,23 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--bg-warm);
-      border: 1px solid var(--card-border);
-      padding: 10px 16px;
-      border-radius: 12px;
+      background: #FAF7F2;
+      border: 1.5px solid var(--border-warm);
+      padding: 10px 18px;
+      border-radius: 14px;
     }
-    .vote-btns { display: flex; align-items: center; gap: 10px; }
+
+    .vote-btns {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
     .v-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      border: 1.5px solid var(--card-border);
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border-warm);
       background: #fff;
       font-size: 1.3rem;
       font-weight: 900;
@@ -119,73 +312,146 @@
       align-items: center;
       justify-content: center;
       transition: all 0.15s;
+      color: var(--text-main);
     }
-    .v-btn:hover { background: var(--accent-soft); border-color: var(--accent-brown); }
-    .vote-track { flex: 1; height: 14px; background: #e5ddcf; border-radius: 7px; margin: 0 16px; overflow: hidden; }
-    .vote-fill { height: 100%; width: 0%; background: var(--accent-brown); border-radius: 7px; transition: width 0.3s ease; }
-    .vote-count { font-size: 1.2rem; font-weight: 900; color: var(--accent-brown); min-width: 80px; text-align: right; }
 
-    /* 揭曉按鈕 */
-    .action-panel { padding: 24px 40px 36px; display: flex; justify-content: center; border-top: 2px solid var(--card-border); background: #faf7f2; }
+    .v-btn:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent-brown);
+    }
+
+    .vote-track {
+      flex: 1;
+      height: 14px;
+      background: #EBE4D8;
+      border-radius: 7px;
+      margin: 0 16px;
+      overflow: hidden;
+    }
+
+    .vote-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 7px;
+      transition: width 0.35s ease;
+    }
+
+    .card-A .vote-fill { background: var(--color-a); }
+    .card-B .vote-fill { background: var(--color-b); }
+    .card-C .vote-fill { background: var(--color-c); }
+    .card-D .vote-fill { background: var(--color-d); }
+
+    .vote-count {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--accent-brown);
+      min-width: 85px;
+      text-align: right;
+    }
+
+    /* 揭曉按鈕列 */
+    .action-panel {
+      padding: 24px 40px 36px;
+      display: flex;
+      justify-content: center;
+      border-top: 2px solid var(--border-warm);
+      background: #FAF7F2;
+    }
+
     .reveal-btn {
-      padding: 18px 48px;
-      border-radius: 36px;
-      background: linear-gradient(135deg, #8c572b 0%, #633b19 100%);
+      padding: 16px 44px;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(135deg, #8C572B 0%, #633B19 100%);
       color: #fff;
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: 900;
       border: none;
       cursor: pointer;
       box-shadow: 0 8px 24px rgba(100, 60, 25, 0.25);
       transition: all 0.25s;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
     }
-    .reveal-btn:hover { transform: scale(1.03); background: linear-gradient(135deg, #a06634 0%, #73451e 100%); }
+
+    .reveal-btn:hover {
+      transform: scale(1.03);
+      background: linear-gradient(135deg, #A06634 0%, #73451E 100%);
+    }
 
     /* 大師公案揭曉卡片 */
     .master-reveal-card {
       margin: 20px 40px 40px;
       background: #fff;
-      border-radius: 20px;
-      border: 3px solid #d4af37;
+      border-radius: var(--radius-lg);
+      border: 3px solid var(--accent-gold);
       box-shadow: var(--shadow-lg);
       display: none;
       overflow: hidden;
       animation: popIn 0.4s ease forwards;
     }
+
     @keyframes popIn {
       from { opacity: 0; transform: translateY(16px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
     .master-header {
-      background: linear-gradient(135deg, #26221f 0%, #3d352e 100%);
+      background: linear-gradient(135deg, #2D2724 0%, #463B34 100%);
       color: #fff;
       padding: 24px 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+
     .master-name { font-size: 1.65rem; font-weight: 900; color: #fcefd6; }
     .master-origin { font-size: 1.05rem; color: #d4c5b5; }
-    .master-badge { background: #d4af37; color: #241d15; font-size: 1rem; font-weight: 900; padding: 6px 16px; border-radius: 20px; }
+    .master-badge { background: var(--accent-gold); color: #241d15; font-size: 1rem; font-weight: 900; padding: 6px 18px; border-radius: var(--radius-pill); }
 
-    .master-body { padding: 32px; display: flex; flex-direction: column; gap: 24px; }
-    .m-box { background: #fcf9f4; border-radius: 14px; padding: 22px 26px; border: 1.5px solid var(--card-border); }
-    .m-box-title { font-size: 1.2rem; font-weight: 900; color: var(--accent-brown); margin-bottom: 12px; }
+    .master-body {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .m-box {
+      background: #FCF9F4;
+      border-radius: 16px;
+      padding: 22px 26px;
+      border: 1.5px solid var(--border-warm);
+    }
+
+    .m-box-title { font-size: 1.2rem; font-weight: 900; color: var(--accent-brown); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
     .m-box-text { font-size: 1.2rem; color: #2b2723; line-height: 1.7; }
-    .antidote-box { background: #f0f7f4; border-color: #bad9ce; }
+    .antidote-box { background: #F0F7F4; border-color: #BAD9CE; }
     .antidote-box .m-box-title { color: #286353; }
-    .antidote-box .m-box-text { color: #16473b; font-weight: 700; }
+    .antidote-box .m-box-text { color: #16473B; font-weight: 700; }
 
-    footer { background: #ffffff; border-top: 1px solid var(--card-border); padding: 24px; text-align: center; font-size: 0.95rem; color: var(--text-muted); margin-top: auto; }
+    /* 頁腳版權區 */
+    footer {
+      background: #ffffff;
+      border-top: 1px solid var(--border-warm);
+      padding: 24px;
+      text-align: center;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: auto;
+    }
+
     footer a { color: var(--accent-brown); text-decoration: underline; font-weight: 700; }
   </style>
 </head>
 <body>
 
   <header>
-    <div class="brand-title">Puti-AI | 現場互動思辨：人生關鍵抉擇</div>
+    <div class="brand-title">
+      <span class="brand-badge"><i class="fa-solid fa-leaf"></i> 讀書會思辨</span>
+      Puti-AI | 禪者心燈：人生關鍵抉擇
+    </div>
     <div class="header-actions">
-      <button class="btn" onclick="toggleFullscreen()">⛶ 全螢幕投影</button>
+      <button class="btn" onclick="toggleFullscreen()"><i class="fa-solid fa-expand"></i> 全螢幕投影</button>
     </div>
   </header>
 
@@ -200,7 +466,6 @@
   </footer>
 
   <script>
-    // 6 大純現代情境題目（零劇透、零公案線索、純粹價值觀激辯）
     const questionsData = [
       {
         id: 1,
@@ -208,27 +473,10 @@
         title: "情境一：重大專案慶功宴上的私下對話",
         desc: "你帶領跨部門團隊拚死拚活半年，完成了一個挽救公司業績的超大專案。慶功宴結束後，大老闆單獨把你找進辦公室，笑著拍拍你的肩膀問：「這半年辛苦你了，你覺得這段日子你最大的收穫或意義是什麼？」",
         options: [
-          {
-            letter: "A",
-            text: "打造了一套標準化流程，證明了我們團隊即使在極限壓力下也能打勝仗。",
-            votes: 0
-          },
-          {
-            letter: "B",
-            text: "看到公司跟夥伴們能渡過難關、大家有成果，我自己被不被看見根本不重要。",
-            votes: 0
-          },
-          {
-            letter: "C",
-            text: "累積了足夠的信任與話語權，接下來能替跟隨我的兄弟爭取更好的調薪與資源。",
-            votes: 0
-          },
-          {
-            letter: "D",
-            text: "老實說，什麼意義都沒有；我們只是碰巧在那裡，把該做的事情做完而已。",
-            votes: 0,
-            isZen: true
-          }
+          { letter: "A", text: "打造了一套標準化流程，證明了我們團隊即使在極限壓力下也能打勝仗。", votes: 0 },
+          { letter: "B", text: "看到公司跟夥伴們能渡過難關、大家有成果，我自己被不被看見根本不重要。", votes: 0 },
+          { letter: "C", text: "累積了足夠的信任與話語權，接下來能替跟隨我的兄弟爭取更好的調薪與資源。", votes: 0 },
+          { letter: "D", text: "老實說，什麼意義都沒有；我們只是碰巧在那裡，把該做的事情做完而已。", votes: 0, isZen: true }
         ],
         master: {
           name: "菩提達摩 祖師",
@@ -244,27 +492,10 @@
         title: "情境二：隔壁部門天天找碴放冷箭，你的終極戰略是？",
         desc: "隔壁單位主管因為利益衝突，這半年天天在背後放冷箭、到處散播不實傳聞、在跨部門會議影射開嗆，甚至故意刁難流程搶資源，搞得你手下組員人心浮躁、士氣受挫。身為負責人，你打算怎麼徹底擺平他？",
         options: [
-          {
-            letter: "A",
-            text: "蒐集所有通訊截圖與違規證據，正式上報總經理與法務，公事公辦給他好看。",
-            votes: 0
-          },
-          {
-            letter: "B",
-            text: "他放冷箭你就設局回敬，在關鍵大會上狠狠打他臉，讓他知道你絕不是好惹的。",
-            votes: 0
-          },
-          {
-            letter: "C",
-            text: "私下約他吃高檔餐廳開誠布公聊開，把部分成果做成順水人情分給他，化敵為友。",
-            votes: 0
-          },
-          {
-            letter: "D",
-            text: "完全當作空氣，每天準時上班喝茶、專注做自己的事，一句話都懶得回應他。",
-            votes: 0,
-            isZen: true
-          }
+          { letter: "A", text: "蒐集所有通訊截圖與違規證據，正式上報總經理與法務，公事公辦給他好看。", votes: 0 },
+          { letter: "B", text: "他放冷箭你就設局回敬，在關鍵大會上狠狠打他臉，讓他知道你絕不是好惹的。", votes: 0 },
+          { letter: "C", text: "私下約他吃高檔餐廳開誠布公聊開，把部分成果做成順水人情分給他，化敵為友。", votes: 0 },
+          { letter: "D", text: "完全當作空氣，每天準時上班喝茶、專注做自己的事，一句話都懶得回應他。", votes: 0, isZen: true }
         ],
         master: {
           name: "道樹禪師",
@@ -280,27 +511,10 @@
         title: "情境三：正午 38 度烈日下的突發粗活",
         desc: "正值炎炎夏日正中午，有一大批極關鍵的教材物資受潮，必須立刻在戶外高溫下搬運翻曬。你剛擦汗搬起重物，一位平時極貼心的年輕部屬跑來勸你：「主管，這太陽太毒辣容易中暑，這粗活交給我們年輕人做就好，或者等下午四點涼一點您再來處理吧？」",
         options: [
-          {
-            letter: "A",
-            text: "「太感謝了！那這件事全交給你們小組負責，我相信大家能搞定，我看大方向。」",
-            votes: 0
-          },
-          {
-            letter: "B",
-            text: "「你說得對，高溫容易熱衰竭。大家先停手吹冷氣，等下午四點轉涼再一口氣搬。」",
-            votes: 0
-          },
-          {
-            letter: "C",
-            text: "「謝謝好意，大家一起動手！我多搬一箱你們就少累一箱，主管就是要以身作則。」",
-            votes: 0
-          },
-          {
-            letter: "D",
-            text: "微笑謝絕，在大太陽下繼續彎腰動手：「這是我的事，別人替不了；現在不曬，待何時？」",
-            votes: 0,
-            isZen: true
-          }
+          { letter: "A", text: "「太感謝了！那這件事全交給你們小組負責，我相信大家能搞定，我看大方向。」", votes: 0 },
+          { letter: "B", text: "「你說得對，高溫容易熱衰竭。大家先停手吹冷氣，等下午四點轉涼再一口氣搬。」", votes: 0 },
+          { letter: "C", text: "「謝謝好意，大家一起動手！我多搬一箱你們就少累一箱，主管就是要以身作則。」", votes: 0 },
+          { letter: "D", text: "微笑謝絕，在大太陽下繼續彎腰動手：「這是我的事，別人替不了；現在不曬，待何時？」", votes: 0, isZen: true }
         ],
         master: {
           name: "永平寺老僧（道元禪師甘拜下風）",
@@ -316,27 +530,10 @@
         title: "情境四：跟隨業界頂尖大佬三年後的攤牌",
         desc: "你費盡千辛萬苦跟隨一位業界公認的天花板大佬學習了三年。這三年間，他每天只叫你收發快遞、買咖啡、擦桌子、買便當，從沒教過你任何核心技能。今天你終於忍不住開口：「老闆，三年了，您到底什麼時候才要傳授我能翻盤的底層心法？」你希望他怎麼回答？",
         options: [
-          {
-            letter: "A",
-            text: "「做雜事是為了磨練心性。連這點枯燥都受不了，把真本事交給你你也接不住。」",
-            votes: 0
-          },
-          {
-            letter: "B",
-            text: "「真正的核心從來不是教出來的，而是在做雜事中自己悟出來的，不要指望別人餵。」",
-            votes: 0
-          },
-          {
-            letter: "C",
-            text: "「你買咖啡我喝了，你送公文我簽了，我哪一天沒在示範？生活每一步就是全部的答案。」",
-            votes: 0,
-            isZen: true
-          },
-          {
-            letter: "D",
-            text: "「別傻了，這世上根本沒有什麼底層心法，那些到處賣秘笈的都是在收割焦慮而已。」",
-            votes: 0
-          }
+          { letter: "A", text: "「做雜事是為了磨練心性。連這點枯燥都受不了，把真本事交給你你也接不住。」", votes: 0 },
+          { letter: "B", text: "「真正的核心從來不是教出來的，而是在做雜事中自己悟出來的，不要指望別人餵。」", votes: 0 },
+          { letter: "C", text: "「你買咖啡我喝了，你送公文我簽了，我哪一天沒在示範？生活每一步就是全部的答案。」", votes: 0, isZen: true },
+          { letter: "D", text: "「別傻了，這世上根本沒有什麼底層心法，那些到處賣秘笈的都是在收割焦慮而已。」", votes: 0 }
         ],
         master: {
           name: "天皇道悟禪師",
@@ -352,27 +549,10 @@
         title: "情境五：身邊那位看破紅塵、情緒極度穩定的高人朋友",
         desc: "你身邊有一位朋友，近年深入研究心靈與哲學，個人狀態極好、情緒穩定、財務自由，對世俗紛擾波瀾不驚。最近身邊好友遭遇重大變故、家庭破碎陷入泥淖，大家找他商量，他卻淡淡地說：「每個人都有自己的課題與因緣，過度干涉只會剝奪別人的成長。我們過好自己、默默祝福就好。」你聽完內心最真實的感受是？",
         options: [
-          {
-            letter: "A",
-            text: "這是真正成熟且有邊界感的智慧，懂得課題分離，不濫用廉價同情心。",
-            votes: 0
-          },
-          {
-            letter: "B",
-            text: "這根本是包裝在高級話術下的精緻利己與冷漠，空有本領卻冷眼旁觀，真想狠狠打醒他！",
-            votes: 0,
-            isZen: true
-          },
-          {
-            letter: "C",
-            text: "很羨慕他能修煉到這種境界，每個人能力有限，照顧好自己本來就沒有錯。",
-            votes: 0
-          },
-          {
-            letter: "D",
-            text: "每個人對生活的選擇不同，有人入世幫忙，有人出世修心，沒有誰比誰高尚。",
-            votes: 0
-          }
+          { letter: "A", text: "這是真正成熟且有邊界感的智慧，懂得課題分離，不濫用廉價同情心。", votes: 0 },
+          { letter: "B", text: "這根本是包裝在高級話術下的精緻利己與冷漠，空有本領卻冷眼旁觀，真想狠狠打醒他！", votes: 0, isZen: true },
+          { letter: "C", text: "很羨慕他能修煉到這種境界，每個人能力有限，照顧好自己本來就沒有錯。", votes: 0 },
+          { letter: "D", text: "每個人對生活的選擇不同，有人入世幫忙，有人出世修心，沒有誰比誰高尚。", votes: 0 }
         ],
         master: {
           name: "黃檗希運禪師",
@@ -388,27 +568,10 @@
         title: "情境六：如果能自主選擇人生最後一幕告別...",
         desc: "如果能替自己或摯愛的人生最後那一刻設定一種氛圍，你最嚮往哪一種告別場景？",
         options: [
-          {
-            letter: "A",
-            text: "親友圍在床邊，彼此溫柔地互道「感謝、道歉、道愛、道別」，安詳相擁落幕。",
-            votes: 0
-          },
-          {
-            letter: "B",
-            text: "在莊嚴肅穆的祝禱與誦經聲中，沒有世俗雜念，心無罣礙地安詳遠去。",
-            votes: 0
-          },
-          {
-            letter: "C",
-            text: "全家人像在玩捉迷藏開玩笑：搶著說「我先走一步了」，在談笑打趣中輕鬆離去。",
-            votes: 0,
-            isZen: true
-          },
-          {
-            letter: "D",
-            text: "像秋葉從枝頭自然飄落，不留遺言、不打擾任何人，靜悄悄走向山林消失。",
-            votes: 0
-          }
+          { letter: "A", text: "親友圍在床邊，彼此溫柔地互道「感謝、道歉、道愛、道別」，安詳相擁落幕。", votes: 0 },
+          { letter: "B", text: "在莊嚴肅穆的祝禱與誦經聲中，沒有世俗雜念，心無罣礙地安詳遠去。", votes: 0 },
+          { letter: "C", text: "全家人像在玩捉迷藏開玩笑：搶著說「我先走一步了」，在談笑打趣中輕鬆離去。", votes: 0, isZen: true },
+          { letter: "D", text: "像秋葉從枝頭自然飄落，不留遺言、不打擾任何人，靜悄悄走向山林消失。", votes: 0 }
         ],
         master: {
           name: "龐蘊居士 一家",
@@ -425,21 +588,19 @@
 
     function playZenChime() {
       try {
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         if (audioCtx.state === 'suspended') audioCtx.resume();
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.6);
+        osc.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.8);
         gain.gain.setValueAtTime(0.7, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.9);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.0);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.start();
-        osc.stop(audioCtx.currentTime + 0.9);
+        osc.stop(audioCtx.currentTime + 1.0);
       } catch (e) {}
     }
 
@@ -450,7 +611,7 @@
         const tab = document.createElement("div");
         tab.className = `q-tab ${idx === currentQIndex ? 'active' : ''}`;
         tab.onclick = () => switchQuestion(idx);
-        tab.innerText = `情境 ${q.id}：${q.tabName}`;
+        tab.innerHTML = `<i class="fa-solid fa-seedling"></i> 情境 ${q.id}：${q.tabName}`;
         container.appendChild(tab);
       });
     }
@@ -468,15 +629,15 @@
 
         <div class="options-section">
           <div class="options-tip-bar">
-            <span class="options-tip">👉 請大家舉手表決你的直覺抉擇（點選 ＋／− 即時計票）：</span>
-            <button class="reset-btn" onclick="resetCurrentVotes()">重置本題票數</button>
+            <span class="options-tip"><i class="fa-solid fa-hand-point-up"></i> 請大家舉手投票直覺抉擇（點選 ＋／− 即時計票）：</span>
+            <button class="reset-btn" onclick="resetCurrentVotes()"><i class="fa-solid fa-arrows-rotate"></i> 重置本題票數</button>
           </div>
 
           <div class="quad-grid">
             ${q.options.map((opt, optIdx) => {
               const percent = totalVotes > 0 ? Math.round((opt.votes / totalVotes) * 100) : 0;
               return `
-                <div class="quad-card">
+                <div class="quad-card card-${opt.letter}">
                   <div class="card-top">
                     <div class="card-letter">${opt.letter}</div>
                     <div class="card-text">${opt.text}</div>
@@ -499,7 +660,7 @@
 
         <div class="action-panel">
           <button class="reveal-btn" onclick="revealMasterAnswer()">
-            🔔 揭曉禪宗大師如何出招
+            <i class="fa-solid fa-bell"></i> 揭曉禪宗大師神操作
           </button>
         </div>
 
@@ -513,15 +674,15 @@
           </div>
           <div class="master-body">
             <div class="m-box">
-              <div class="m-box-title">📜 【原汁原味禪門公案】</div>
+              <div class="m-box-title"><i class="fa-solid fa-scroll"></i> 【原汁原味禪門公案】</div>
               <div class="m-box-text">${q.master.story}</div>
             </div>
             <div class="m-box">
-              <div class="m-box-title">✨ 【星雲大師法音解析】</div>
+              <div class="m-box-title"><i class="fa-solid fa-spa"></i> 【星雲大師法音解析】</div>
               <div class="m-box-text">${q.master.analysis}</div>
             </div>
             <div class="m-box antidote-box">
-              <div class="m-box-title">💊 【現代人間解藥】</div>
+              <div class="m-box-title"><i class="fa-solid fa-heart-pulse"></i> 【現代人間解藥】</div>
               <div class="m-box-text">${q.master.antidote}</div>
             </div>
           </div>
